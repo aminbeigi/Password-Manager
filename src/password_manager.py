@@ -4,22 +4,25 @@ import tkinter as tk
 class Application(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
-        self.pack()
         self.create_widgets()
 
     def submit(self):
-        print("The submit button has been pressed.")
+        print(self.input_email.get())
 
     def create_widgets(self):
         # heading
-        self.heading = tk.Label(root, text="Add entry")
-        self.heading.pack()
+        self.label_heading = tk.Label(root, text="Add entry")
+        self.label_heading.grid(row=0, column=0)
         # input fields
-        self.email = tk.Label(root, text="Email: ")
-        self.email.pack()
+        self.label_email = tk.Label(root, text="Email: ")
+        self.label_email.grid(row=1, column=0)
+        self.input_email = tk.Entry(root)
+        self.input_email.grid(row=1, column=1)
+
+
         # submit button
         self.submit_buttom = tk.Button(root, text="Submit", command=self.submit)
-        self.submit_buttom.pack()
+        self.submit_buttom.grid(row=99, column=99)
 
 
 root = tk.Tk()
