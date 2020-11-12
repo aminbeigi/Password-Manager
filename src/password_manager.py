@@ -4,8 +4,12 @@ import tkinter as tk
 root = tk.Tk()
 
 # generate the user interface
+
+#class LoginPage(tk.Frame):
+#    def __init__(self)
+
 class Application(tk.Frame):
-    def __init__(self, master):
+    def __init__(self, master=None):
         super().__init__(master)
         self.create_widgets()
 
@@ -14,6 +18,9 @@ class Application(tk.Frame):
         email = self.email_entry.get()
         password = self.password_entry.get()
         print(title, email, password)
+        root.destroy()
+        
+        
 
     def create_widgets(self):
         # heading
