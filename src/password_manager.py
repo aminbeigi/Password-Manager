@@ -1,11 +1,17 @@
 import tkinter as tk
 from tkinter import font as tkfont 
 
+""" Simple Password manager.
+
+A simple password manager with a login page.
+Requires input in config.ini.
+  
+"""
+
 class Application(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
 
         # the container is where we'll stack a bunch of frames
@@ -39,7 +45,7 @@ class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-
+        
         ### input fields ###
         self.login_label = tk.Label(self, text="Key Password: ", font=controller.title_font)
         self.login_entry = tk.Entry(self, show='*')
@@ -48,12 +54,18 @@ class LoginPage(tk.Frame):
 
         # submit button
         self.on_submit_button = tk.Button(self, text="Submit",
-                            command=lambda: controller.show_frame("MainPage"))
+                            command=self.on_submit)
 
         self.on_submit_button.grid(row=99, column=99)
+    
+    def on_submit(self):
+        password = self.login_entry.get()
+        if (password == "123"):
+            self.controller.show_frame("MainPage")
+        # incorrect password
+        self.login_entry.delete(0, 'end')
 
 class MainPage(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
