@@ -1,31 +1,62 @@
 import tkinter as tk
+from tkinter import font as tkfont 
 
-# global variables
-root = tk.Tk()
+class Application(tk.Tk):
 
-# generate the user interface
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+
+        self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
+
+        # the container is where we'll stack a bunch of frames
+        # on top of each other, then the one we want visible
+        # will be raised above the others
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+        self.frames = {}
+        for F in (LoginPage, MainPage):
+            page_name = F.__name__
+            frame = F(parent=container, controller=self)
+            self.frames[page_name] = frame
+
+            # put all of the pages in the same location;
+            # the one on the top of the stacking order
+            # will be the one that is visible.
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame("LoginPage")
+
+    def show_frame(self, page_name):
+        '''Show a frame for the given page name'''
+        frame = self.frames[page_name]
+        frame.tkraise()
+
 
 class LoginPage(tk.Frame):
-    def __init__(self, master=None):
-        super().__init__(master)
-        self.create_widgets()
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
 
-    def on_submit(self):
-        print("hey")
-    
-    def create_widgets(self):
-        self.login_label = tk.Label(root, text="Key Password: ", font="arial 16")
-        self.login_entry = tk.Entry(root, show='*')
+        ### input fields ###
+        self.login_label = tk.Label(self, text="Key Password: ", font=controller.title_font)
+        self.login_entry = tk.Entry(self, show='*')
         self.login_label.grid(row=0, column=0)
         self.login_entry.grid(row=0, column=1)
-    
-        self.on_submit_buttom = tk.Button(root, text="on_submit", font="arial 16", command=self.on_submit)
-        self.on_submit_buttom.grid(row=99, column=99)
 
+        # submit button
+        self.on_submit_button = tk.Button(self, text="Submit",
+                            command=lambda: controller.show_frame("MainPage"))
 
-class Application(tk.Frame):
-    def __init__(self, master=None):
-        super().__init__(master)
+        self.on_submit_button.grid(row=99, column=99)
+
+class MainPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
         self.create_widgets()
 
     def on_submit(self):
@@ -36,33 +67,33 @@ class Application(tk.Frame):
 
     def create_widgets(self):
         # heading
-        self.label_heading = tk.Label(root, text="Add entry", font="arial 24")
+        self.label_heading = tk.Label(self, text="Add entry", font="arial 24")
         self.label_heading.grid(row=0, column=0)
         ### input fields ###
-        self.title_label = tk.Label(root, text="Title: ", font="arial 16")
-        self.title_entry = tk.Entry(root)
+        self.title_label = tk.Label(self, text="Title: ", font="arial 16")
+        self.title_entry = tk.Entry(self)
         self.title_label.grid(row=1, column=0)
         self.title_entry.grid(row=1, column=1)
 
-        self.email_label = tk.Label(root, text="Email: ", font="arial 16")
-        self.email_entry = tk.Entry(root)
+        self.email_label = tk.Label(self, text="Email: ", font="arial 16")
+        self.email_entry = tk.Entry(self)
         self.email_label.grid(row=2, column=0)
         self.email_entry.grid(row=2, column=1)
 
-        self.password_label = tk.Label(root, text="Password: ", font="arial 16")
-        self.password_entry = tk.Entry(root, show='*')
+        self.password_label = tk.Label(self, text="Password: ", font="arial 16")
+        self.password_entry = tk.Entry(self, show='*')
         self.password_label.grid(row=3, column=0)
         self.password_entry.grid(row=3, column=1)       
 
         # submit button
-        self.on_submit_buttom = tk.Button(root, text="on_submit", font="arial 16", command=self.on_submit)
-        self.on_submit_buttom.grid(row=99, column=99)
+        self.on_submit_buttom = tk.Button(self, text="on_submit", font="arial 16", command=self.on_submit)
+        self.on_submit_buttom.grid(row=99, column=99)        
 
 # entry to program
 def main():
-    root.title("Password Manager")
-    app = LoginPage(root)
+    app = Application()
+    app.title("Password Manager")
     app.mainloop()
- 
+
 if __name__ == '__main__':
     main()
