@@ -6,11 +6,11 @@ import configparser
 
 """Simple Password manager.
 
-A simple password manager with a login page.
+A simple password manager with two frames - login page and the password manager page.
 Requires input in config.ini.
 """
 
-### globals variables
+### globals variables ###
 CONFIG_FILE_PATH = 'config.ini'
 config = configparser.ConfigParser()
 config.read(CONFIG_FILE_PATH)
@@ -44,7 +44,7 @@ class Application(tk.Tk):
         self.show_frame("LoginPage")
 
     def show_frame(self, page_name):
-        '''Show a frame for the given page name'''
+        # show a frame for the given page name
         frame = self.frames[page_name]
         frame.tkraise()
 
@@ -53,6 +53,7 @@ class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.attempt_count = 1
         
         ### input fields ###
         self.login_label = tk.Label(self, text="Key Password: ", font=controller.title_font)
@@ -64,13 +65,16 @@ class LoginPage(tk.Frame):
         self.on_submit_button = tk.Button(self, text="Submit",
                             command=self.on_submit)
 
-        self.on_submit_button.grid(row=99, column=99)
+        self.on_submit_button.grid(row=1, column=2)
     
     def on_submit(self):
         password = self.login_entry.get()
         if (password == MASTER_PASSWORD):
             self.controller.show_frame("MainPage")
         # incorrect password
+        self.incorrect_password_label = tk.Label(self, text=f"Incorrect password({self.attempt_count})", fg="red")
+        self.attempt_count += 1
+        self.incorrect_password_label.grid(row=1, column=0)
         self.login_entry.delete(0, 'end')
 
 class MainPage(tk.Frame):
@@ -106,7 +110,7 @@ class MainPage(tk.Frame):
         self.password_entry.grid(row=3, column=1)       
 
         # submit button
-        self.on_submit_buttom = tk.Button(self, text="on_submit", font="arial 16", command=self.on_submit)
+        self.on_submit_buttom = tk.Button(self, text="Submit", font="arial 16", command=self.on_submit)
         self.on_submit_buttom.grid(row=99, column=99)        
 
 # entry to program
