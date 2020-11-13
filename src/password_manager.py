@@ -1,12 +1,20 @@
 import tkinter as tk
 from tkinter import font as tkfont 
 
-""" Simple Password manager.
+import os
+import configparser
+
+"""Simple Password manager.
 
 A simple password manager with a login page.
 Requires input in config.ini.
-  
 """
+
+### globals variables
+CONFIG_FILE_PATH = 'config.ini'
+config = configparser.ConfigParser()
+config.read(CONFIG_FILE_PATH)
+MASTER_PASSWORD = config.get('LOGIN', 'master_password')
 
 class Application(tk.Tk):
 
@@ -60,7 +68,7 @@ class LoginPage(tk.Frame):
     
     def on_submit(self):
         password = self.login_entry.get()
-        if (password == "123"):
+        if (password == MASTER_PASSWORD):
             self.controller.show_frame("MainPage")
         # incorrect password
         self.login_entry.delete(0, 'end')
