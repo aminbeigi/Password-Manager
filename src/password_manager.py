@@ -17,7 +17,6 @@ config.read(CONFIG_FILE_PATH)
 MASTER_PASSWORD = config.get('LOGIN', 'master_password')
 
 class Application(tk.Tk):
-
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
@@ -87,12 +86,11 @@ class MainPage(tk.Frame):
         title = self.title_entry.get()
         email = self.email_entry.get()
         password = self.password_entry.get()
-        print(title, email, password)     
 
     def create_widgets(self):
         # heading
         self.label_heading = tk.Label(self, text="Add entry", font="arial 24")
-        self.label_heading.grid(row=0, column=0)
+        self.label_heading.grid(row=0, column=0, columnspan=2)
         ### input fields ###
         self.title_label = tk.Label(self, text="Title: ", font="arial 16")
         self.title_entry = tk.Entry(self)
@@ -111,7 +109,7 @@ class MainPage(tk.Frame):
 
         # submit button
         self.on_submit_buttom = tk.Button(self, text="Submit", font="arial 16", command=self.on_submit)
-        self.on_submit_buttom.grid(row=99, column=99)        
+        self.on_submit_buttom.grid(row=4, column=1, sticky="e")        
 
 # entry to program
 def main():
