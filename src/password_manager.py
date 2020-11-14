@@ -75,6 +75,7 @@ class LoginPage(tk.Frame):
         self.attempt_count += 1
         self.incorrect_password_label.grid(row=1, column=0)
         self.login_entry.delete(0, 'end')
+        
 
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -86,14 +87,16 @@ class MainPage(tk.Frame):
         title = self.title_entry.get()
         email = self.email_entry.get()
         password = self.password_entry.get()
-        if (title or email or password == ""):
+
+        if (title == "" or email == "" or password == ""):
+            self.incorrect_input_label.grid(row=4, column=0, columnspan=2, sticky='w')
+        else:
             with open('passwords.txt', 'a') as f:
                 f.write(f"{title}:\n {email}\n {password}\n\n")
             self.title_entry.delete(0, 'end')
             self.email_entry.delete(0, 'end')
             self.password_entry.delete(0, 'end')
-        else:
-            
+            self.incorrect_input_label.grid_forget()
 
     def create_widgets(self):
         # heading
@@ -117,7 +120,9 @@ class MainPage(tk.Frame):
 
         # submit button
         self.on_submit_buttom = tk.Button(self, text="Submit", font='arial 16', command=self.on_submit)
-        self.on_submit_buttom.grid(row=4, column=1, sticky='e')        
+        self.on_submit_buttom.grid(row=4, column=1, sticky='e')   
+        self.incorrect_input_label = tk.Label(self, text=f"empty input box/boxes.", fg='red')
+     
 
 # entry to program
 def main():
