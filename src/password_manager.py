@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import font as tkfont 
-
+from encryption import Encryption
 import os
 import configparser
 
@@ -82,6 +82,7 @@ class MainPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.create_widgets()
+        self.encryption = Encryption()
 
     def on_submit(self):
         title = self.title_entry.get()
@@ -92,7 +93,8 @@ class MainPage(tk.Frame):
             self.incorrect_input_label.grid(row=4, column=0, columnspan=2, sticky='w')
         else:
             with open('passwords.txt', 'a') as f:
-                f.write(f"{title}:\n {email}\n {password}\n\n")
+                encrypted_password = self.encryption.encrypt(plain_text=password)
+                f.write(f"{title}:\n {email}\n {encrypted_password}\n\n")
             self.title_entry.delete(0, 'end')
             self.email_entry.delete(0, 'end')
             self.password_entry.delete(0, 'end')
@@ -123,7 +125,6 @@ class MainPage(tk.Frame):
         self.on_submit_buttom.grid(row=4, column=1, sticky='e')   
         self.incorrect_input_label = tk.Label(self, text=f"empty input box/boxes.", fg='red')
      
-
 # entry to program
 def main():
     app = Application()
