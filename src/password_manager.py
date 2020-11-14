@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import font as tkfont 
 from encryption import Encryption
-import os
 import configparser
 
 """Simple Password manager.
