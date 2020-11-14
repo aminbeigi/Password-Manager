@@ -19,13 +19,13 @@ MASTER_PASSWORD = config.get('LOGIN', 'master_password')
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
+        self.title_font = tkfont.Font(family='Helvetica', size=18, weight='bold', slant='italic')
 
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
         # will be raised above the others
         container = tk.Frame(self)
-        container.pack(side="top", fill="both", expand=True)
+        container.pack(side='top', fill='both', expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
@@ -38,9 +38,9 @@ class Application(tk.Tk):
             # put all of the pages in the same location;
             # the one on the top of the stacking order
             # will be the one that is visible.
-            frame.grid(row=0, column=0, sticky="nsew")
+            frame.grid(row=0, column=0, sticky='nsew')
 
-        self.show_frame("LoginPage")
+        self.show_frame('LoginPage')
 
     def show_frame(self, page_name):
         # show a frame for the given page name
@@ -69,9 +69,9 @@ class LoginPage(tk.Frame):
     def on_submit(self):
         password = self.login_entry.get()
         if (password == MASTER_PASSWORD):
-            self.controller.show_frame("MainPage")
+            self.controller.show_frame('MainPage')
         # incorrect password
-        self.incorrect_password_label = tk.Label(self, text=f"Incorrect password({self.attempt_count})", fg="red")
+        self.incorrect_password_label = tk.Label(self, text=f"Incorrect password({self.attempt_count})", fg='red')
         self.attempt_count += 1
         self.incorrect_password_label.grid(row=1, column=0)
         self.login_entry.delete(0, 'end')
@@ -86,13 +86,21 @@ class MainPage(tk.Frame):
         title = self.title_entry.get()
         email = self.email_entry.get()
         password = self.password_entry.get()
+        if (title or email or password == ""):
+            with open('passwords.txt', 'a') as f:
+                f.write(f"{title}:\n {email}\n {password}\n\n")
+            self.title_entry.delete(0, 'end')
+            self.email_entry.delete(0, 'end')
+            self.password_entry.delete(0, 'end')
+        else:
+            
 
     def create_widgets(self):
         # heading
-        self.label_heading = tk.Label(self, text="Add entry", font="arial 24")
+        self.label_heading = tk.Label(self, text="Add entry", font='arial 24')
         self.label_heading.grid(row=0, column=0, columnspan=2)
         ### input fields ###
-        self.title_label = tk.Label(self, text="Title: ", font="arial 16")
+        self.title_label = tk.Label(self, text="Title: ", font='arial 16')
         self.title_entry = tk.Entry(self)
         self.title_label.grid(row=1, column=0)
         self.title_entry.grid(row=1, column=1)
@@ -102,14 +110,14 @@ class MainPage(tk.Frame):
         self.email_label.grid(row=2, column=0)
         self.email_entry.grid(row=2, column=1)
 
-        self.password_label = tk.Label(self, text="Password: ", font="arial 16")
+        self.password_label = tk.Label(self, text="Password: ", font='arial 16')
         self.password_entry = tk.Entry(self, show='*')
         self.password_label.grid(row=3, column=0)
         self.password_entry.grid(row=3, column=1)       
 
         # submit button
-        self.on_submit_buttom = tk.Button(self, text="Submit", font="arial 16", command=self.on_submit)
-        self.on_submit_buttom.grid(row=4, column=1, sticky="e")        
+        self.on_submit_buttom = tk.Button(self, text="Submit", font='arial 16', command=self.on_submit)
+        self.on_submit_buttom.grid(row=4, column=1, sticky='e')        
 
 # entry to program
 def main():
