@@ -13,7 +13,7 @@
 
 ## Description
 A basic GUI that allows you to store your emails, password and account information.  
-Plain text passwords stored inside `password.txt` are encrytped using the Fernet recipe (symmetric key encryption)>
+Plain text passwords stored inside `password.txt` are encrytped using the Fernet recipe (symmetric key encryption).
 
 ## Requirements
 * TK version 8.6+
