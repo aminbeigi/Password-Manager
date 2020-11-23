@@ -123,8 +123,7 @@ class MainPage(tk.Frame):
 
     def on_get_password(self):
         entry_no = self.variable.get()[2]
-        data = DB.get_entry(entry_no)
-        password = data[0][0]
+        password = DB.get_password(entry_no)
         pyperclip.copy(password) 
 
     def create_widgets(self):
