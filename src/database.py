@@ -82,19 +82,10 @@ class Database:
         self.cnx.commit()
 
     def select_entries(self):
-        # select a row with 'entry_no' and 'title' columns from database
+        # select ALL rows with 'entry_no' and 'title' columns from database
         query = ("SELECT entry_no, title FROM user_entries")
         self.cursor.execute(query)
-        output = self.cursor.fetchall()
-        return output
-
-    def get_entry(self, entry_no):
-        # select a row from database
-        query = (f"""SELECT * FROM user_entries 
-                WHERE entry_no = '{entry_no}'""")
-        self.cursor.execute(query)
-        output = self.cursor.fetchall()
-        return output
+        return self.cursor.fetchall()
 
     def get_title(self, entry_no):
         # select a row from database
@@ -108,7 +99,12 @@ class Database:
         query = (f"""SELECT username FROM user_entries 
                 WHERE entry_no = '{entry_no}'""")
         self.cursor.execute(query)
-        return self.cursor.fetchall()[0][0]    
+        output = self.cursor.fetchall()[0][0]
+        
+        # user has not entered a username
+        if (output == ''):
+            return 'N/A'
+        return output   
 
     def get_email(self, entry_no):
         # select a row from database
@@ -134,7 +130,6 @@ class Database:
         self.cursor.execute(query)
         output = self.cursor.fetchall()[0][0]
         return output
-
     
     def clear_table(self):
         query = ("DROP TABLE user_entries")   
@@ -152,7 +147,8 @@ class Database:
 
 def main():
     db = Database()
-    print(db.get_title('2'))
+    print(db.get_username('2'))
+    #print(db.select_entries())
 
 if __name__ == '__main__':
     main()
