@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import font as tkfont 
 import configparser
+import database
 
 """Simple Password manager.
 
@@ -83,18 +84,28 @@ class MainPage(tk.Frame):
         self.controller = controller
         self.create_widgets()
 
+        # initialise database
+        self.db = database.Database()
+
     def on_submit(self):
         title = self.title_entry.get()
-        email = self.email_entry.get()
+        username = self.username_entry.get()
         password = self.password_entry.get()
+        email = self.email_entry.get()
 
-        if (title == "" or email == "" or password == ""):
-            self.incorrect_input_label.grid(row=4, column=0, columnspan=2, sticky='w')
-        else:
+        # correct input
+        if (title != "" and email != "" and password != ""):
+            self.db.insert(title, username, password, email)
+
             self.title_entry.delete(0, 'end')
-            self.email_entry.delete(0, 'end')
+            self.username_entry.delete(0, 'end')
             self.password_entry.delete(0, 'end')
+            self.email_entry.delete(0, 'end')
             self.incorrect_input_label.grid_forget()
+
+        # missing input
+        else:
+            self.incorrect_input_label.grid(row=5, column=0, columnspan=2, sticky='w')
 
     def create_widgets(self):
         # heading
@@ -106,10 +117,10 @@ class MainPage(tk.Frame):
         self.title_label.grid(row=1, column=0)
         self.title_entry.grid(row=1, column=1)
 
-        self.username_label = tk.Label(self, text="User name: ", font="arial 16")
-        self.username_label_entry = tk.Entry(self)
+        self.username_label = tk.Label(self, text="Username(opt): ", font="arial 16")
+        self.username_entry = tk.Entry(self)
         self.username_label.grid(row=2, column=0)
-        self.username_label_entry.grid(row=2, column=1)
+        self.username_entry.grid(row=2, column=1)
 
         self.password_label = tk.Label(self, text="Password: ", font='arial 16')
         self.password_entry = tk.Entry(self, show='*')
