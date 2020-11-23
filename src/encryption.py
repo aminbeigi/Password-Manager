@@ -16,5 +16,5 @@ class Encryption:
         return Fernet(KEY).encrypt(message)    
 
     def decrypt(self, token):
-        token = token.encode()
+        token = token.encode() # to bytes
         return Fernet(KEY).decrypt(token)
