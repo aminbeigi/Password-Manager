@@ -24,7 +24,7 @@ DB = database.Database() # initialise database
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.title_font = tkfont.Font(family='Helvetica', size=18, weight='bold', slant='italic')
+        self.title_font = tkfont.Font(family='Helvetica', size=28, weight='bold', slant='italic')
 
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
@@ -97,6 +97,10 @@ class MainPage(tk.Frame):
         if (title != "" and email != "" and password != ""):
             DB.insert(title, username, password, email)
 
+            self.options = DB.select_entries()
+            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.show_account)
+            drop.grid(row=1, column=3) 
+
             self.title_entry.delete(0, 'end')
             self.username_entry.delete(0, 'end')
             self.password_entry.delete(0, 'end')
@@ -108,23 +112,27 @@ class MainPage(tk.Frame):
         
     def show_account(self, value):
         data = DB.get_entry(entry_no=str(value[0]))
-        title = data[0][1]
         username = data[0][2]
         email = data[0][4]
 
         # change labels
-        self.show_title_label.config(text=title, font="arial 16")
         self.show_username_label.config(text=username, font="arial 16")
         self.show_email_label.config(text=email, font="arial 16")
 
-        self.show_title_label.grid(row=2, column=3)   
-        self.show_username_label.grid(row=3, column=3)   
-        self.show_email_label.grid(row=4, column=3)    
+        self.show_username_label.grid(row=2, column=3)   
+        self.show_email_label.grid(row=3, column=3)    
 
     def on_get_password(self):
         entry_no = self.variable.get()[2]
         password = DB.get_password(entry_no)
         pyperclip.copy(password) 
+    
+    def on_reset(self):
+        DB.clear_table()
+        # reset menu
+        self.variable.set('...')
+        drop = tk.OptionMenu(self, self.variable, '...')
+        drop.grid(row=1, column=3)
 
     def create_widgets(self):
         # heading
@@ -157,18 +165,16 @@ class MainPage(tk.Frame):
         self.incorrect_input_label = tk.Label(self, text=f"empty input box/boxes.", fg='red')
 
         ### empty seperator coloumn
-        self.empty_column = tk.Label(self, text="----------")
+        self.empty_column = tk.Label(self, text=' '*10)
         self.empty_column.grid(row=0, column=2)       
 
         ### stuff on the right ###
         # initial values
-        self.show_title_label = tk.Label(self, text="*", font="arial 16")
         self.show_username_label = tk.Label(self, text="*", font="arial 16") 
         self.show_email_label = tk.Label(self, text="*", font="arial 16")  
 
-        self.show_title_label.grid(row=2, column=3)   
-        self.show_username_label.grid(row=3, column=3)   
-        self.show_email_label.grid(row=4, column=3)   
+        self.show_username_label.grid(row=2, column=3)   
+        self.show_email_label.grid(row=3, column=3)   
 
         # title
         self.label_heading2 = tk.Label(self, text="Accounts:", font='arial 24')
@@ -178,14 +184,24 @@ class MainPage(tk.Frame):
         self.options = DB.select_entries()
 
         self.variable = tk.StringVar()
-        self.variable.set(self.options[0])
 
-        drop = tk.OptionMenu(self, self.variable, *self.options, command=self.show_account)
+        # if empty database then initialise menu
+        try:
+            self.variable.set(self.options[0])
+            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.show_account)
+        except IndexError:
+            self.variable.set('...')
+            drop = tk.OptionMenu(self, self.variable, '...')
+
         drop.grid(row=1, column=3)   
 
         # get password
         self.on_get_password_btn = tk.Button(self, text="get password", font='arial 16', command=self.on_get_password)
-        self.on_get_password_btn.grid(row=5, column=3, sticky='w')   
+        self.on_get_password_btn.grid(row=4, column=3)  
+
+        # reset database entries
+        self.on_reset_btn = tk.Button(self, text="reset", font='arial 12', command=self.on_reset)
+        self.on_reset_btn.grid(row=5, column=3)           
      
 # entry to program
 def main():
