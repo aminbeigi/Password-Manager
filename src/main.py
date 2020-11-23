@@ -84,8 +84,7 @@ class MainPage(tk.Frame):
         self.controller = controller
         self.create_widgets()
 
-        # initialise database
-        self.db = database.Database()
+        self.db = database.Database() # initialise database
 
     def on_submit(self):
         title = self.title_entry.get()
@@ -102,7 +101,6 @@ class MainPage(tk.Frame):
             self.password_entry.delete(0, 'end')
             self.email_entry.delete(0, 'end')
             self.incorrect_input_label.grid_forget()
-
         # missing input
         else:
             self.incorrect_input_label.grid(row=5, column=0, columnspan=2, sticky='w')
@@ -136,9 +134,33 @@ class MainPage(tk.Frame):
         self.on_submit_buttom = tk.Button(self, text="Submit", font='arial 16', command=self.on_submit)
         self.on_submit_buttom.grid(row=5, column=1, sticky='e')   
         self.incorrect_input_label = tk.Label(self, text=f"empty input box/boxes.", fg='red')
+
+        ### empty seperator coloumn
+        self.empty_column = tk.Label(self, text="---------------")
+        self.empty_column.grid(row=0, column=2)       
+
+        ### stuff on the right ###
+        # title
+        self.label_heading2 = tk.Label(self, text="Accounts:", font='arial 24')
+        self.label_heading2.grid(row=0, column=3, columnspan=2)
+        # dropdown menu
+        options = [
+            "Ebay"
+        ]
+
+        on_click = tk.StringVar()
+        on_click.set(options[0])
+
+        drop = tk.OptionMenu(self, on_click, *options)
+        drop.grid(row=1, column=3)   
+
+        # get password
+        self.on_submit_buttom = tk.Button(self, text="get password", font='arial 16', command=self.on_submit)
+        self.on_submit_buttom.grid(row=4, column=3, sticky='w')   
      
 # entry to program
 def main():
+    # add an icon
     app = Application()
     app.title("Password Manager")
     app.mainloop()
