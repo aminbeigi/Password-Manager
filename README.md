@@ -12,11 +12,13 @@
 </p>
 
 ## Description
-A simple GUI that allows you to store your emails, password and account information.
+A basic GUI that allows you to store your emails, password and account information.  
+Plain text passwords stored inside `password.txt` are encrytped using the Fernet recipe (symmetric key encryption).
 
 ## Requirements
 * TK version 8.6+
 * Python 3.8.2+
+* cryptography (Python module)
 ## Contributions
 Contributions are always welcome!  
 Just make a [pull request](../../pulls).
