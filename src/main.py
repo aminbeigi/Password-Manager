@@ -131,7 +131,7 @@ class MainPage(tk.Frame):
 
             # text
             self.reset_labels()
-            self.display_clipboard_label()
+            self.clipboard_label.grid(row=5, column=0)
     
     def reset_btn_click(self):
         if (not(DB.is_empty())):
@@ -149,11 +149,7 @@ class MainPage(tk.Frame):
 
     def reset_labels(self):
          self.incorrect_input_label.grid_forget()
-         self.clipboard_label.grid_forget()
-    
-    def display_clipboard_label():
-        self.clipboard_label = tk.Label(self, text=f"copied to clipboard!", fg='green')
-        self.clipboard_label.grid(row=5, column=0)         
+         self.clipboard_label.grid_forget()   
 
     def create_widgets(self):
         ### left hand side (LHS) widgets ###
@@ -183,10 +179,12 @@ class MainPage(tk.Frame):
 
         # submit button
         self.submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.submit_btn_clicked)
-        self.submit_btn.grid(row=5, column=1, sticky='e')   
-        
-        self.incorrect_input_label = tk.Label(self, text=f"missing input", fg='red')      
+        self.submit_btn.grid(row=5, column=1, sticky='e') 
 
+        # initialise bottom left labels
+        self.clipboard_label = tk.Label(self, text=f"copied to clipboard!", fg='green')
+        self.incorrect_input_label = tk.Label(self, text=f"missing input", fg='red')   
+             
         ### Right hand side (RHS) widgets ###
         # heading
         self.label_heading2 = tk.Label(self, text="Accounts:", font='arial 24')
@@ -196,10 +194,7 @@ class MainPage(tk.Frame):
         self.RHS_username_label = tk.Label(self, text="*", font="arial 16") 
         self.RHS_email_label = tk.Label(self, text="*", font="arial 16")  
         self.RHS_username_label.grid(row=2, column=3)   
-        self.RHS_email_label.grid(row=3, column=3)
-
-        self.clipboard_label = tk.Label(self, text=f"copied to clipboard!", fg='green')
-        self.clipboard_label.grid(row=5, column=0)  
+        self.RHS_email_label.grid(row=3, column=3)  
 
         # initialise dropdown menu values
         DB.select_entries()
