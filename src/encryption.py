@@ -1,5 +1,5 @@
 from cryptography.fernet import Fernet
-import configparser
+from my_configparser import MyConfigParser
 
 """Symmetric key encryption
 
@@ -7,10 +7,8 @@ Using the Fernet recipie via the cyrptography module to encrypt passwords in mai
 """
 
 ### globals variables ###
-CONFIG_FILE_PATH = 'config.ini'
-config = configparser.ConfigParser()
-config.read(CONFIG_FILE_PATH)
-KEY = config.get('MAIN', 'key')
+CONFIG = MyConfigParser()
+KEY = CONFIG.get('MAIN', 'key')
 
 class Encryption:
     def encrypt(self, message):

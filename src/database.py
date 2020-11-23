@@ -1,23 +1,22 @@
 import mysql.connector
 from mysql.connector import errorcode
 import configparser
-# local files
 import encryption
+from my_configparser import MyConfigParser
 
 """The database
 
-This is an epic database.
+This database will hold one table 'user_entries' that will contain all the entries
+the user has inputted in main.py.
 """
 
 ### globals variables ###
-CONFIG_FILE_PATH = 'config.ini'
-config = configparser.ConfigParser()
-config.read(CONFIG_FILE_PATH)
+CONFIG = MyConfigParser()
 
-USER = config.get('mySQL', 'user')
-PASSWORD = config.get('mySQL', 'password')
-HOST = config.get('mySQL', 'host')
-DATABASE = config.get('mySQL', 'database')
+USER = CONFIG.get('mySQL', 'user')
+PASSWORD = CONFIG.get('mySQL', 'password')
+HOST = CONFIG.get('mySQL', 'host')
+DATABASE = CONFIG.get('mySQL', 'database')
 
 ### SQL code to create tables
 TABLES = {}
@@ -57,11 +56,9 @@ class Database:
 
     def create_table(self):
         for table_name in TABLES:
-            print(table_name)
-            table_description = TABLES[table_name]
             try:
                 print("Creating table {}: ".format(table_name), end='')
-                self.cursor.execute(table_description)
+                self.cursor.execute(TABLES[table_name])
             except mysql.connector.Error as err:
                 if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
                     print("already exists.")
@@ -79,20 +76,20 @@ class Database:
 
         data_entry = ((str(int(self.get_highest_id())+1)), title, username, encrypted_password, email)
         
-        # insert new entry 
+        # insert new entry
         self.cursor.execute(add_entry, data_entry)
 
         self.cnx.commit()
 
     def select_entries(self):
-        # select all entry_no, title columns from database
+        # select a row with 'entry_no' and 'title' columns from database
         query = ("SELECT entry_no, title FROM user_entries")
         self.cursor.execute(query)
         output = self.cursor.fetchall()
         return output
 
     def get_entry(self, entry_no):
-        # select all columns from database
+        # select a row from database
         query = (f"""SELECT * FROM user_entries 
                 WHERE entry_no = '{entry_no}'""")
         self.cursor.execute(query)
@@ -100,7 +97,7 @@ class Database:
         return output
 
     def get_password(self, entry_no):
-        # selects...
+        # returns an encrypted password
         query = (f"""SELECT password FROM user_entries 
                 WHERE entry_no = '{entry_no}'""")
         self.cursor.execute(query)
@@ -109,14 +106,14 @@ class Database:
         return decrypted_password.decode() # change from bytes to string
 
     def get_highest_id(self):
+        if (self.is_empty()):
+            return 0
+
         query = (f"SELECT MAX(entry_no) FROM user_entries")
         self.cursor.execute(query)
         output = self.cursor.fetchall()[0][0]
+        return output
 
-        if (output != None):
-            return output
-        else:
-            return 0
     
     def clear_table(self):
         query = ("DROP TABLE user_entries")   
@@ -131,12 +128,3 @@ class Database:
             return True
         else:
             return False
-        
-
-def main():
-    db = Database()
-    #db.insert('bob jane2', 'steve123', 'p@ssw0rd', 'me@aminbeigi.com')
-    db.is_empty()
-
-if __name__ == '__main__':
-    main()

@@ -3,6 +3,7 @@ from tkinter import font as tkfont
 import configparser
 import pyperclip
 import database
+from my_configparser import MyConfigParser
 
 """Simple Password manager.
 
@@ -12,17 +13,17 @@ the main page is raised above the login page. The frame on top will be the frame
 """
 
 ### globals ###
-CONFIG_FILE_PATH = 'config.ini'
-config = configparser.ConfigParser() # TO-DO: TRY CATCH error here to see if found config
-config.read(CONFIG_FILE_PATH)
-MASTER_PASSWORD = config.get('LOGIN', 'master_password')
-
+CONFIG = MyConfigParser()
 DB = database.Database() # initialise database
+
+MASTER_PASSWORD = CONFIG.get('LOGIN', 'master_password')
+
+
 
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.title_font = tkfont.Font(family='Helvetica', size=28, weight='bold', slant='italic')
+        self.title_font = tkfont.Font(family='Helvetica', size=16, weight='bold', slant='italic')
 
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
@@ -58,7 +59,7 @@ class LoginPage(tk.Frame):
         self.attempt_count = 1
         
         # input fields
-        self.login_label = tk.Label(self, text="Key Password: ", font=controller.title_font)
+        self.login_label = tk.Label(self, text="Master Password: ", font='arial 24')
         self.login_entry = tk.Entry(self, show='*')
         self.login_label.grid(row=0, column=0)
         self.login_entry.grid(row=0, column=1)
