@@ -1,6 +1,8 @@
 import mysql.connector
 from mysql.connector import errorcode
 import configparser
+# local files
+import encryption
 
 """The database
 
@@ -78,17 +80,23 @@ class Database:
         self.cnx.commit()
         print("Created new column.")
     
-    def select(self):
-        # select the password
-        query = ("""SELECT title FROM user_entries 
-                WHERE entry_no = '1'""")
+    def select_entries(self):
+        # select lst
+        query = ("SELECT entry_no, title FROM user_entries")
+        self.cursor.execute(query)
+        output = self.cursor.fetchall()
+        return output
+
+    def get_entry(self, entry_no):
+        # selects...
+        query = (f"""SELECT * FROM user_entries 
+                WHERE entry_no = '{entry_no}'""")
         self.cursor.execute(query)
         output = self.cursor.fetchall()
         return output
 
 def main():
     test = Database()
-    test.insert()
 
 if __name__ == '__main__':
     main()    
