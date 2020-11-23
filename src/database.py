@@ -96,6 +96,27 @@ class Database:
         output = self.cursor.fetchall()
         return output
 
+    def get_title(self, entry_no):
+        # select a row from database
+        query = (f"""SELECT title FROM user_entries 
+                WHERE entry_no = '{entry_no}'""")
+        self.cursor.execute(query)
+        return self.cursor.fetchall()[0][0]  
+
+    def get_username(self, entry_no):
+        # select a row from database
+        query = (f"""SELECT username FROM user_entries 
+                WHERE entry_no = '{entry_no}'""")
+        self.cursor.execute(query)
+        return self.cursor.fetchall()[0][0]    
+
+    def get_email(self, entry_no):
+        # select a row from database
+        query = (f"""SELECT email FROM user_entries 
+                WHERE entry_no = '{entry_no}'""")
+        self.cursor.execute(query)
+        return self.cursor.fetchall()[0][0]  
+
     def get_password(self, entry_no):
         # returns an encrypted password
         query = (f"""SELECT password FROM user_entries 
@@ -128,3 +149,10 @@ class Database:
             return True
         else:
             return False
+
+def main():
+    db = Database()
+    print(db.get_title('2'))
+
+if __name__ == '__main__':
+    main()
