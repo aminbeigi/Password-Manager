@@ -3,7 +3,7 @@ import configparser
 
 """Symmetric key encryption
 
-Using the Fernet recipie via the cyrptography module to encrypt passwords in password_manager.py.
+Using the Fernet recipie via the cyrptography module to encrypt passwords in main.py.
 """
 
 ### globals variables ###
