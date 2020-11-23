@@ -1,4 +1,5 @@
 import mysql.connector
+from mysql.connector import errorcode
 import configparser
 
 """The database
@@ -16,11 +17,52 @@ PASSWORD = config.get('mySQL', 'password')
 HOST = config.get('mySQL', 'host')
 DATABASE = config.get('mySQL', 'database')
 
+### tables
+TABLES = {}
+TABLES['user_entries'] = (
+    "CREATE TABLE `user_entries` ("
+    "  `entry_no` varchar(50) NOT NULL,"
+    "  `title` varchar(50) NOT NULL,"
+    "  PRIMARY KEY (`entry_no`)"    
+    ") ENGINE=InnoDB")
+
 class Database:
     def __init__(self):
-        cnx = mysql.connector.connect(
-            user=USER,
-            password=PASSWORD,
-            host=HOST,
-            database=DATABASE
-        )
+        # set up connection with database
+        try:
+            cnx = mysql.connector.connect(
+                user=USER,
+                password=PASSWORD,
+                host=HOST,
+                database=DATABASE
+            )
+            self.cursor = cnx.cursor()
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database does not exist")
+            else:
+                print(err) 
+        self.create_tables()
+
+    def create_tables(self):
+        for table_name in TABLES:
+            table_description = TABLES[table_name]
+            try:
+                print("Creating table {}: ".format(table_name), end='')
+                self.cursor.execute(table_description)
+            except mysql.connector.Error as err:
+                if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+                    print("already exists.")
+                else:
+                    print(err.msg)
+            else:
+                print("OK")      
+
+def main():
+    db = Database()
+    print(db)
+
+if __name__ == '__main__':
+    main()    
