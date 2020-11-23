@@ -67,11 +67,11 @@ class LoginPage(tk.Frame):
 
         # submit button
         self.submit_btn = tk.Button(self, text="Submit",
-                            command=self.on_submit_click)
+                            command=self.submit_btn_click)
 
         self.submit_btn.grid(row=1, column=2)
     
-    def on_submit_click(self):
+    def submit_btn_click(self):
         password = self.login_entry.get()
         if (password == MASTER_PASSWORD):
             self.controller.show_frame('MainPage')
@@ -87,7 +87,7 @@ class MainPage(tk.Frame):
         self.controller = controller
         self.create_widgets()
 
-    def on_submit_click(self):
+    def submit_btn_click(self):
         title = self.title_entry.get()
         username = self.username_entry.get()
         password = self.password_entry.get()
@@ -97,12 +97,12 @@ class MainPage(tk.Frame):
         if (title == "" or email == "" or password == ""):
             self.incorrect_input_label.grid_forget()
             self.incorrect_input_label.grid(row=5, column=0, columnspan=2, sticky='w')
-        # missing
+        # missing input
         else:
             DB.insert(title, username, password, email)
 
             self.options = DB.select_entries()
-            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.show_account)
+            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_account)
             drop.grid(row=1, column=3) 
 
             self.title_entry.delete(0, 'end')
@@ -112,17 +112,17 @@ class MainPage(tk.Frame):
             self.incorrect_input_label.grid_forget()
 
         
-    def show_account(self, value):
+    def display_account(self, value):
         data = DB.get_entry(entry_no=str(value[0]))
         username = data[0][2]
         email = data[0][4]
 
-        # change labels
-        self.show_username_label.config(text=username, font="arial 16")
-        self.show_email_label.config(text=email, font="arial 16")
+        # update labels
+        self.RHS_username_label.config(text=username, font="arial 16")
+        self.RHS_email_label.config(text=email, font="arial 16")
 
-        self.show_username_label.grid(row=2, column=3)   
-        self.show_email_label.grid(row=3, column=3)    
+        self.RHS_username_label.grid(row=2, column=3)   
+        self.RHS_email_label.grid(row=3, column=3)    
 
     def password_btn_click(self):
         if (not(DB.is_empty())):
@@ -138,16 +138,23 @@ class MainPage(tk.Frame):
     def reset_btn_click(self):
         if (not(DB.is_empty())):
             DB.clear_table()
-            # reset menu
-            self.variable.set('...')
-            drop = tk.OptionMenu(self, self.variable, '...')
-            drop.grid(row=1, column=3)
+            self.reset_RHS_conent()
+    
+    def reset_RHS_conent(self):
+        self.variable.set('...')
+        drop = tk.OptionMenu(self, self.variable, '...')
+        drop.grid(row=1, column=3) 
+        self.RHS_username_label.config(text='*', font="arial 16")
+        self.RHS_email_label.config(text='*', font="arial 16")
+        self.RHS_username_label.grid(row=2, column=3)   
+        self.RHS_email_label.grid(row=3, column=3)    
 
     def create_widgets(self):
+        ### left hand side (LHS) ###
         # heading
         self.label_heading = tk.Label(self, text="Add entry", font='arial 24')
         self.label_heading.grid(row=0, column=0, sticky='w')
-        ### input fields ###
+        # input fields
         self.title_label = tk.Label(self, text="Title: ", font='arial 16')
         self.title_entry = tk.Entry(self)
         self.title_label.grid(row=1, column=0)
@@ -169,21 +176,17 @@ class MainPage(tk.Frame):
         self.email_entry.grid(row=4, column=1)    
 
         # submit button
-        self.submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.on_submit_click)
+        self.submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.submit_btn_click)
         self.submit_btn.grid(row=5, column=1, sticky='e')   
-        self.incorrect_input_label = tk.Label(self, text=f"empty input box/boxes.", fg='red')
+        self.incorrect_input_label = tk.Label(self, text=f"incorrect input", fg='red')      
 
-        ### empty seperator coloumn
-        self.empty_column = tk.Label(self, text=' '*10)
-        self.empty_column.grid(row=0, column=2)       
+        ### Right hand side (RHS) content ###
+        # initialise values
+        self.RHS_username_label = tk.Label(self, text="*", font="arial 16") 
+        self.RHS_email_label = tk.Label(self, text="*", font="arial 16")  
 
-        ### stuff on the right ###
-        # initial values
-        self.show_username_label = tk.Label(self, text="*", font="arial 16") 
-        self.show_email_label = tk.Label(self, text="*", font="arial 16")  
-
-        self.show_username_label.grid(row=2, column=3)   
-        self.show_email_label.grid(row=3, column=3)   
+        self.RHS_username_label.grid(row=2, column=3)   
+        self.RHS_email_label.grid(row=3, column=3)   
 
         # title
         self.label_heading2 = tk.Label(self, text="Accounts:", font='arial 24')
@@ -194,23 +197,26 @@ class MainPage(tk.Frame):
 
         self.variable = tk.StringVar()
 
-        # if empty database then initialise menu
-        try:
+        if (not(DB.is_empty())):
             self.variable.set(self.options[0])
-            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.show_account)
-        except IndexError:
+            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_account)
+        else:
             self.variable.set('...')
             drop = tk.OptionMenu(self, self.variable, '...')
 
-        drop.grid(row=1, column=3)   
+        drop.grid(row=1, column=3)
 
         # get password
         self.password_btn = tk.Button(self, text="password", font='arial 16', command=self.password_btn_click)
-        self.password_btn.grid(row=4, column=3)  
+        self.password_btn.grid(row=4, column=3)
 
         # reset database entries
         self.reset_btn = tk.Button(self, text="reset", font='arial 12', command=self.reset_btn_click)
-        self.reset_btn.grid(row=5, column=3)           
+        self.reset_btn.grid(row=5, column=3)
+
+        ### empty seperator coloumn ###
+        self.empty_column = tk.Label(self, text=' '*10)
+        self.empty_column.grid(row=0, column=2)         
      
 # entry to program
 def main():
