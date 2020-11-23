@@ -66,12 +66,12 @@ class LoginPage(tk.Frame):
         self.login_entry.grid(row=0, column=1)
 
         # submit button
-        self.on_submit_btn = tk.Button(self, text="Submit",
-                            command=self.on_submit)
+        self.submit_btn = tk.Button(self, text="Submit",
+                            command=self.on_submit_click)
 
-        self.on_submit_btn.grid(row=1, column=2)
+        self.submit_btn.grid(row=1, column=2)
     
-    def on_submit(self):
+    def on_submit_click(self):
         password = self.login_entry.get()
         if (password == MASTER_PASSWORD):
             self.controller.show_frame('MainPage')
@@ -87,14 +87,18 @@ class MainPage(tk.Frame):
         self.controller = controller
         self.create_widgets()
 
-    def on_submit(self):
+    def on_submit_click(self):
         title = self.title_entry.get()
         username = self.username_entry.get()
         password = self.password_entry.get()
         email = self.email_entry.get()
 
         # correct input
-        if (title != "" and email != "" and password != ""):
+        if (title == "" or email == "" or password == ""):
+            self.incorrect_input_label.grid_forget()
+            self.incorrect_input_label.grid(row=5, column=0, columnspan=2, sticky='w')
+        # missing
+        else:
             DB.insert(title, username, password, email)
 
             self.options = DB.select_entries()
@@ -106,9 +110,7 @@ class MainPage(tk.Frame):
             self.password_entry.delete(0, 'end')
             self.email_entry.delete(0, 'end')
             self.incorrect_input_label.grid_forget()
-        # missing input
-        else:
-            self.incorrect_input_label.grid(row=5, column=0, columnspan=2, sticky='w')
+
         
     def show_account(self, value):
         data = DB.get_entry(entry_no=str(value[0]))
@@ -122,22 +124,29 @@ class MainPage(tk.Frame):
         self.show_username_label.grid(row=2, column=3)   
         self.show_email_label.grid(row=3, column=3)    
 
-    def on_get_password(self):
-        entry_no = self.variable.get()[2]
-        password = DB.get_password(entry_no)
-        pyperclip.copy(password) 
+    def password_btn_click(self):
+        if (not(DB.is_empty())):
+            entry_no = self.variable.get()[2]
+            password = DB.get_password(entry_no)
+            pyperclip.copy(password)
+
+            # text
+            self.incorrect_input_label.grid_forget()
+            self.clipboard_label = tk.Label(self, text=f"copied to clipboard!", fg='green')
+            self.clipboard_label.grid(row=5, column=0) 
     
-    def on_reset(self):
-        DB.clear_table()
-        # reset menu
-        self.variable.set('...')
-        drop = tk.OptionMenu(self, self.variable, '...')
-        drop.grid(row=1, column=3)
+    def reset_btn_click(self):
+        if (not(DB.is_empty())):
+            DB.clear_table()
+            # reset menu
+            self.variable.set('...')
+            drop = tk.OptionMenu(self, self.variable, '...')
+            drop.grid(row=1, column=3)
 
     def create_widgets(self):
         # heading
         self.label_heading = tk.Label(self, text="Add entry", font='arial 24')
-        self.label_heading.grid(row=0, column=0, columnspan=2)
+        self.label_heading.grid(row=0, column=0, sticky='w')
         ### input fields ###
         self.title_label = tk.Label(self, text="Title: ", font='arial 16')
         self.title_entry = tk.Entry(self)
@@ -160,8 +169,8 @@ class MainPage(tk.Frame):
         self.email_entry.grid(row=4, column=1)    
 
         # submit button
-        self.on_submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.on_submit)
-        self.on_submit_btn.grid(row=5, column=1, sticky='e')   
+        self.submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.on_submit_click)
+        self.submit_btn.grid(row=5, column=1, sticky='e')   
         self.incorrect_input_label = tk.Label(self, text=f"empty input box/boxes.", fg='red')
 
         ### empty seperator coloumn
@@ -196,18 +205,18 @@ class MainPage(tk.Frame):
         drop.grid(row=1, column=3)   
 
         # get password
-        self.on_get_password_btn = tk.Button(self, text="get password", font='arial 16', command=self.on_get_password)
-        self.on_get_password_btn.grid(row=4, column=3)  
+        self.password_btn = tk.Button(self, text="password", font='arial 16', command=self.password_btn_click)
+        self.password_btn.grid(row=4, column=3)  
 
         # reset database entries
-        self.on_reset_btn = tk.Button(self, text="reset", font='arial 12', command=self.on_reset)
-        self.on_reset_btn.grid(row=5, column=3)           
+        self.reset_btn = tk.Button(self, text="reset", font='arial 12', command=self.reset_btn_click)
+        self.reset_btn.grid(row=5, column=3)           
      
 # entry to program
 def main():
-    # add an icon
     app = Application()
     app.title("Password Manager")
+    app.iconbitmap('images/icon.ico')
     app.mainloop()
 
 if __name__ == '__main__':
