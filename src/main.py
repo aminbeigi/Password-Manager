@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import font as tkfont 
 import configparser
+import pyperclip
+# local files
 import database
 
 """Simple Password manager.
@@ -64,10 +66,10 @@ class LoginPage(tk.Frame):
         self.login_entry.grid(row=0, column=1)
 
         # submit button
-        self.on_submit_button = tk.Button(self, text="Submit",
+        self.on_submit_btn = tk.Button(self, text="Submit",
                             command=self.on_submit)
 
-        self.on_submit_button.grid(row=1, column=2)
+        self.on_submit_btn.grid(row=1, column=2)
     
     def on_submit(self):
         password = self.login_entry.get()
@@ -104,6 +106,23 @@ class MainPage(tk.Frame):
         # missing input
         else:
             self.incorrect_input_label.grid(row=5, column=0, columnspan=2, sticky='w')
+        
+    def show_account(self, value):
+        data = DB.get_entry(entry_no=str(value[0]))
+        title = data[0][1]
+        username = data[0][2]
+        email = data[0][4]
+
+        # change labels
+        self.show_title_label.config(text=title, font="arial 16")
+        self.show_username_label.config(text=username, font="arial 16")
+        self.show_email_label.config(text=email, font="arial 16")
+
+ 
+
+        self.show_title_label.grid(row=2, column=3)   
+        self.show_username_label.grid(row=3, column=3)   
+        self.show_email_label.grid(row=4, column=3)        
 
     def create_widgets(self):
         # heading
@@ -131,8 +150,8 @@ class MainPage(tk.Frame):
         self.email_entry.grid(row=4, column=1)    
 
         # submit button
-        self.on_submit_buttom = tk.Button(self, text="Submit", font='arial 16', command=self.on_submit)
-        self.on_submit_buttom.grid(row=5, column=1, sticky='e')   
+        self.on_submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.on_submit)
+        self.on_submit_btn.grid(row=5, column=1, sticky='e')   
         self.incorrect_input_label = tk.Label(self, text=f"empty input box/boxes.", fg='red')
 
         ### empty seperator coloumn
@@ -140,22 +159,31 @@ class MainPage(tk.Frame):
         self.empty_column.grid(row=0, column=2)       
 
         ### stuff on the right ###
+        # initial values
+        self.show_title_label = tk.Label(self, text="*", font="arial 16")
+        self.show_username_label = tk.Label(self, text="*", font="arial 16") 
+        self.show_email_label = tk.Label(self, text="*", font="arial 16")  
+
+        self.show_title_label.grid(row=2, column=3)   
+        self.show_username_label.grid(row=3, column=3)   
+        self.show_email_label.grid(row=4, column=3)   
+
         # title
         self.label_heading2 = tk.Label(self, text="Accounts:", font='arial 24')
         self.label_heading2.grid(row=0, column=3, columnspan=2)
         # dropdown menu
         DB.select_entries()
-        options = DB.select_entries()
+        self.options = DB.select_entries()
 
-        on_click = tk.StringVar()
-        on_click.set(options[0])
+        drop_var = tk.StringVar()
+        drop_var.set(self.options[0])
 
-        drop = tk.OptionMenu(self, on_click, *options)
+        drop = tk.OptionMenu(self, drop_var, *self.options, command=self.show_account)
         drop.grid(row=1, column=3)   
 
         # get password
-        self.on_submit_buttom = tk.Button(self, text="get password", font='arial 16', command=self.on_submit)
-        self.on_submit_buttom.grid(row=4, column=3, sticky='w')   
+        self.on_get_password_btn = tk.Button(self, text="get password", font='arial 16')
+        self.on_get_password_btn.grid(row=5, column=3, sticky='w')   
      
 # entry to program
 def main():
