@@ -13,17 +13,10 @@ config.read(CONFIG_FILE_PATH)
 KEY = config.get('MAIN', 'key')
 
 class Encryption:
-    def __init__(self):
-        self.cipher = Fernet(KEY)
-    
-    def encrypt(self, plain_text):
-        plain_text = plain_text.encode('utf-8')
-        self.token = self.cipher.encrypt(plain_text)
-        return self.token
-    
-    def decrypt(self, encrypted_text):
-        decoded = self.cipher.decrypt(encrypted_text)
-        return decoded
+    def encrypt(self, message):
+        message = message.encode() # to bytes
+        return Fernet(KEY).encrypt(message)    
 
-    def generate_key(self):
-        self.key = Fernet.generate_key()
+    def decrypt(self, token):
+        token = token.encode()
+        return Fernet(KEY).decrypt(token)
