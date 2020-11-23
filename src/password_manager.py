@@ -5,8 +5,10 @@ import configparser
 
 """Simple Password manager.
 
-A simple password manager with two frames - login page and the password manager page.
-Requires input in config.ini.
+A simple password manager with two frames - login page and the main page.
+Requires input in config.ini. 
+The two frames are stacked on top of each other, once the correct password is inputted
+the main page is raised above the login page.
 """
 
 ### globals variables ###
