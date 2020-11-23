@@ -119,14 +119,24 @@ class Database:
             return 0
     
     def clear_table(self):
-        query = ("""DROP TABLE user_entries""")   
+        query = ("DROP TABLE user_entries")   
         self.cursor.execute(query) 
         self.create_table()
+
+    def is_empty(self):
+        query = ("SELECT COUNT(*) FROM user_entries")  
+        self.cursor.execute(query)
+        output = self.cursor.fetchall()[0][0]
+        if (output == 0):
+            return True
+        else:
+            return False
         
 
 def main():
     db = Database()
-    db.insert('bob jane2', 'steve123', 'p@ssw0rd', 'me@aminbeigi.com')
+    #db.insert('bob jane2', 'steve123', 'p@ssw0rd', 'me@aminbeigi.com')
+    db.is_empty()
 
 if __name__ == '__main__':
     main()
