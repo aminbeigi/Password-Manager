@@ -101,7 +101,8 @@ class MainPage(tk.Frame):
             self.options = DB.select_entries()
             self.display_RHS(DB.get_highest_id()) # get most recent entry_no
 
-            self.variable.set(self.options[-1:]) # display most recent entry
+            self.variable.set(self.options[-1:][0]) # display most recent entry
+            print(self.options[-1:][0])
 
             drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_RHS)
             drop.grid(row=1, column=3) 
