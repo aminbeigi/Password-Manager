@@ -1,6 +1,6 @@
 <p align="center">
 <img src="src/images/lock.png" /><br/>
-<h3 align="center">Password Manager</h3>
+<h3 align="center">Password Manager width="256" height="213"</h3>
 <p align="center">A password manager created in Python using Tkinter.</p>
 <h2></h2>
 </p>
