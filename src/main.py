@@ -13,7 +13,7 @@ The two frames are stacked on top of each other, once the correct password is in
 the main page is raised above the login page. The frame on top will be the frame that is visible.
 """
 
-### globals variables ###
+### globals self.variables ###
 CONFIG_FILE_PATH = 'config.ini'
 config = configparser.ConfigParser() # TO-DO: TRY CATCH error here to see if found config
 config.read(CONFIG_FILE_PATH)
@@ -80,7 +80,6 @@ class LoginPage(tk.Frame):
         self.attempt_count += 1
         self.incorrect_password_label.grid(row=1, column=0)
         self.login_entry.delete(0, 'end')
-        
 
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -118,11 +117,15 @@ class MainPage(tk.Frame):
         self.show_username_label.config(text=username, font="arial 16")
         self.show_email_label.config(text=email, font="arial 16")
 
- 
-
         self.show_title_label.grid(row=2, column=3)   
         self.show_username_label.grid(row=3, column=3)   
-        self.show_email_label.grid(row=4, column=3)        
+        self.show_email_label.grid(row=4, column=3)    
+
+    def on_get_password(self):
+        entry_no = self.variable.get()[2]
+        data = DB.get_entry(entry_no)
+        password = data[0][3]
+        pyperclip.copy(password) 
 
     def create_widgets(self):
         # heading
@@ -175,14 +178,14 @@ class MainPage(tk.Frame):
         DB.select_entries()
         self.options = DB.select_entries()
 
-        drop_var = tk.StringVar()
-        drop_var.set(self.options[0])
+        self.variable = tk.StringVar()
+        self.variable.set(self.options[0])
 
-        drop = tk.OptionMenu(self, drop_var, *self.options, command=self.show_account)
+        drop = tk.OptionMenu(self, self.variable, *self.options, command=self.show_account)
         drop.grid(row=1, column=3)   
 
         # get password
-        self.on_get_password_btn = tk.Button(self, text="get password", font='arial 16')
+        self.on_get_password_btn = tk.Button(self, text="get password", font='arial 16', command=self.on_get_password)
         self.on_get_password_btn.grid(row=5, column=3, sticky='w')   
      
 # entry to program
