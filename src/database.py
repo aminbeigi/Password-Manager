@@ -117,6 +117,12 @@ class Database:
             return output
         else:
             return 0
+    
+    def clear_table(self):
+        query = ("""DROP TABLE user_entries""")   
+        self.cursor.execute(query) 
+        self.create_table()
+        
 
 def main():
     db = Database()
