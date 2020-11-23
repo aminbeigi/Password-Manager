@@ -65,10 +65,10 @@ class LoginPage(tk.Frame):
         self.login_entry.grid(row=0, column=1)
 
         # submit button
-        self.submit_btn = tk.Button(self, text="Submit",command=self.submit_btn_click)
+        self.submit_btn = tk.Button(self, text="Submit",command=self.submit_btn_clicked)
         self.submit_btn.grid(row=1, column=2)
     
-    def submit_btn_click(self):
+    def submit_btn_clicked(self):
         password = self.login_entry.get()
         if (password == MASTER_PASSWORD):
             self.controller.show_frame('MainPage')
@@ -84,7 +84,7 @@ class MainPage(tk.Frame):
         self.controller = controller
         self.create_widgets()
 
-    def submit_btn_click(self):
+    def submit_btn_clicked(self):
         title = self.title_entry.get()
         username = self.username_entry.get()
         password = self.password_entry.get()
@@ -99,7 +99,8 @@ class MainPage(tk.Frame):
             DB.insert(title, username, password, email)
 
             self.options = DB.select_entries()
-            self.display_RHS(self.options[-1:][0][0]) # get most recent entry_no
+            self.display_RHS(DB.get_highest_id()) # get most recent entry_no
+
             self.variable.set(self.options[-1:]) # display most recent entry
 
             drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_RHS)
@@ -112,9 +113,14 @@ class MainPage(tk.Frame):
             self.incorrect_input_label.grid_forget()
         
     def display_RHS(self, value):
+        '''
         data = DB.get_entry(entry_no=str(value[0]))
         username = data[0][2]
         email = data[0][4]
+        '''
+        entry_no = value[0]
+        username = DB.get_username(entry_no)
+        email = DB.get_email(entry_no)
 
         # update labels
         self.RHS_username_label.config(text=username, font="arial 16")
@@ -174,7 +180,7 @@ class MainPage(tk.Frame):
         self.email_entry.grid(row=4, column=1)    
 
         # submit button
-        self.submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.submit_btn_click)
+        self.submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.submit_btn_clicked)
         self.submit_btn.grid(row=5, column=1, sticky='e')   
         self.incorrect_input_label = tk.Label(self, text=f"missing input", fg='red')      
 
