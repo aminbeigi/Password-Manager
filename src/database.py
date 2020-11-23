@@ -65,18 +65,17 @@ class Database:
                     "(entry_no, title) "
                     "VALUES (%s, %s)") 
 
-        data_entry = ('3', 'cat')
-
+        data_entry = (2, 'dog')
+        
         # insert new entry 
         self.cursor.execute(add_entry, data_entry)
 
-        self.cnx.commit
-        print("did it")
+        self.cnx.commit()
+        print("Created new table.")
 
 def main():
     db = Database()
     db.insert()
- 
 
 if __name__ == '__main__':
     main()    
