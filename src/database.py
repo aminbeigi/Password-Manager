@@ -30,21 +30,21 @@ class Database:
     def __init__(self):
         # set up connection with database
         try:
-            cnx = mysql.connector.connect(
+            self.cnx = mysql.connector.connect(
                 user=USER,
                 password=PASSWORD,
                 host=HOST,
                 database=DATABASE
             )
-            self.cursor = cnx.cursor()
+            self.cursor = self.cnx.cursor()
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print("Something is wrong with your user name or password")
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
                 print("Database does not exist")
             else:
-                print(err) 
-        self.create_tables()
+                print(err)
+        self.create_tables()        
 
     def create_tables(self):
         for table_name in TABLES:
@@ -58,11 +58,25 @@ class Database:
                 else:
                     print(err.msg)
             else:
-                print("OK")      
+                print("OK")   
+
+    def insert(self):
+        add_entry = ("INSERT INTO user_entries "
+                    "(entry_no, title) "
+                    "VALUES (%s, %s)") 
+
+        data_entry = ('3', 'cat')
+
+        # insert new entry 
+        self.cursor.execute(add_entry, data_entry)
+
+        self.cnx.commit
+        print("did it")
 
 def main():
     db = Database()
-    print(db)
+    db.insert()
+ 
 
 if __name__ == '__main__':
     main()    
