@@ -75,9 +75,11 @@ class Database:
     
     def select(self):
         # select the password
-        query = ("SELECT * FROM user_entries ")
-                #"WHERE entry_no = '1'")
-        return self.cursor.execute(query)
+        query = ("""SELECT title FROM user_entries 
+                WHERE entry_no = '1'""")
+        self.cursor.execute(query)
+        output = self.cursor.fetchall()
+        return output
 
 def main():
     db = Database()
