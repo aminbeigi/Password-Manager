@@ -81,7 +81,7 @@ class MainPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.create_widgets()
-        self.encryption = Encryption()
+        self.encryption = Encryption() # initialise object
 
     def on_submit(self):
         title = self.title_entry.get()
