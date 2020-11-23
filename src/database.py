@@ -77,7 +77,7 @@ class Database:
 
         encrypted_password = self.encryption.encrypt(password)
 
-        data_entry = ('2', title, username, encrypted_password, email)
+        data_entry = ((str(int(self.get_highest_id())+1)), title, username, encrypted_password, email)
         
         # insert new entry 
         self.cursor.execute(add_entry, data_entry)
@@ -107,13 +107,20 @@ class Database:
         output = self.cursor.fetchall()[0][0]
 
         decrypted_password = self.encryption.decrypt(output)
+
         return decrypted_password.decode() # change from bytes to string
 
+    def get_highest_id(self):
+        query = (f"SELECT MAX(entry_no) FROM user_entries")
+        self.cursor.execute(query)
+        output = self.cursor.fetchall()[0][0]
+        
+        return output
+
 def main():
-    test = Database()
-    #test.insert('minecraft', 'steve123', 'p@ssw0rd', 'me@aminbeigi.com')
-    #print(test.get_password('2'))
+    db = Database()
+    db.insert('bob jane', 'steve123', 'p@ssw0rd', 'me@aminbeigi.com')
 
 
 if __name__ == '__main__':
-    main()    
+    main()
