@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import font as tkfont 
-from encryption import Encryption
 import configparser
 
 """Simple Password manager.
@@ -8,12 +7,12 @@ import configparser
 A simple password manager with two frames - login page and the main page.
 Requires input in config.ini. 
 The two frames are stacked on top of each other, once the correct password is inputted
-the main page is raised above the login page.
+the main page is raised above the login page. The frame on top will be the frame that is visible.
 """
 
 ### globals variables ###
 CONFIG_FILE_PATH = 'config.ini'
-config = configparser.ConfigParser()
+config = configparser.ConfigParser() # TO-DO: TRY CATCH error here to see if found config
 config.read(CONFIG_FILE_PATH)
 MASTER_PASSWORD = config.get('LOGIN', 'master_password')
 
@@ -83,7 +82,6 @@ class MainPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.create_widgets()
-        self.encryption = Encryption() # initialise object
 
     def on_submit(self):
         title = self.title_entry.get()
@@ -93,9 +91,6 @@ class MainPage(tk.Frame):
         if (title == "" or email == "" or password == ""):
             self.incorrect_input_label.grid(row=4, column=0, columnspan=2, sticky='w')
         else:
-            with open('passwords.txt', 'a') as f:
-                encrypted_password = self.encryption.encrypt(plain_text=password)
-                f.write(f"{title}:\n {email}\n {encrypted_password}\n\n")
             self.title_entry.delete(0, 'end')
             self.email_entry.delete(0, 'end')
             self.password_entry.delete(0, 'end')
@@ -111,19 +106,24 @@ class MainPage(tk.Frame):
         self.title_label.grid(row=1, column=0)
         self.title_entry.grid(row=1, column=1)
 
-        self.email_label = tk.Label(self, text="Email: ", font="arial 16")
-        self.email_entry = tk.Entry(self)
-        self.email_label.grid(row=2, column=0)
-        self.email_entry.grid(row=2, column=1)
+        self.username_label = tk.Label(self, text="User name: ", font="arial 16")
+        self.username_label_entry = tk.Entry(self)
+        self.username_label.grid(row=2, column=0)
+        self.username_label_entry.grid(row=2, column=1)
 
         self.password_label = tk.Label(self, text="Password: ", font='arial 16')
         self.password_entry = tk.Entry(self, show='*')
         self.password_label.grid(row=3, column=0)
-        self.password_entry.grid(row=3, column=1)       
+        self.password_entry.grid(row=3, column=1)   
+
+        self.email_label = tk.Label(self, text="Email: ", font="arial 16")
+        self.email_entry = tk.Entry(self)
+        self.email_label.grid(row=4, column=0)
+        self.email_entry.grid(row=4, column=1)    
 
         # submit button
         self.on_submit_buttom = tk.Button(self, text="Submit", font='arial 16', command=self.on_submit)
-        self.on_submit_buttom.grid(row=4, column=1, sticky='e')   
+        self.on_submit_buttom.grid(row=5, column=1, sticky='e')   
         self.incorrect_input_label = tk.Label(self, text=f"empty input box/boxes.", fg='red')
      
 # entry to program
