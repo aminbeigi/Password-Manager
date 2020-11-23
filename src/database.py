@@ -65,17 +65,23 @@ class Database:
                     "(entry_no, title) "
                     "VALUES (%s, %s)") 
 
-        data_entry = (2, 'dog')
+        data_entry = (1, 'minecraft')
         
         # insert new entry 
         self.cursor.execute(add_entry, data_entry)
 
         self.cnx.commit()
         print("Created new table.")
+    
+    def select(self):
+        # select the password
+        query = ("SELECT * FROM user_entries ")
+                #"WHERE entry_no = '1'")
+        return self.cursor.execute(query)
 
 def main():
     db = Database()
-    db.insert()
+    print(db.select())
 
 if __name__ == '__main__':
     main()    
