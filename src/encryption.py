@@ -21,8 +21,8 @@ class Encryption:
         self.token = self.cipher.encrypt(plain_text)
         return self.token
     
-    def decrypt(self):
-        decoded = self.cipher.decrypt(self.token)
+    def decrypt(self, encrypted_text):
+        decoded = self.cipher.decrypt(encrypted_text)
         return decoded
 
     def generate_key(self):

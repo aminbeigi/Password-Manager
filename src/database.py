@@ -24,15 +24,18 @@ TABLES = {}
 TABLES['user_entries'] = (
     "CREATE TABLE `user_entries` ("
     "  `entry_no` char(3) NOT NULL,"
-    "  `title` varchar(50) NOT NULL,"
-    "  `username` varchar(50),"
-    "  `password` varchar(50) NOT NULL,"
-    "  `email` varchar(50) NOT NULL,"    
+    "  `title` varchar(250) NOT NULL,"
+    "  `username` varchar(250),"
+    "  `password` varchar(250) NOT NULL,"
+    "  `email` varchar(250) NOT NULL,"    
     "  PRIMARY KEY (`entry_no`)"    
     ") ENGINE=InnoDB")
 
 class Database:
     def __init__(self):
+        # initialise encryption object
+        self.encryption = encryption.Encryption()
+
         # set up connection with database
         try:
             self.cnx = mysql.connector.connect(
@@ -72,7 +75,9 @@ class Database:
                     "(entry_no, title, username, password, email) "
                     "VALUES (%s, %s, %s, %s, %s)") 
 
-        data_entry = ('2', title, username, password, email)
+        encrypted_password = self.encryption.encrypt(password)
+
+        data_entry = ('2', title, username, encrypted_password, email)
         
         # insert new entry 
         self.cursor.execute(add_entry, data_entry)
@@ -95,8 +100,18 @@ class Database:
         output = self.cursor.fetchall()
         return output
 
+    def get_password(self, entry_no):
+        # selects...
+        query = (f"""SELECT password FROM user_entries 
+                WHERE entry_no = '{entry_no}'""")
+        self.cursor.execute(query)
+        output = self.cursor.fetchall()[0][0]
+        return self.encryption.decrypt(output)
+
 def main():
     test = Database()
+    test.get_password(2)
+
 
 if __name__ == '__main__':
     main()    
