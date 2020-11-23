@@ -2,18 +2,16 @@ import tkinter as tk
 from tkinter import font as tkfont 
 import configparser
 import pyperclip
-# local files
 import database
 
 """Simple Password manager.
 
-A simple password manager with two frames - login page and the main page.
-Requires input in config.ini. 
+A simple password manager with two frames - login page and the main page. Requires input in config.ini. 
 The two frames are stacked on top of each other, once the correct password is inputted
 the main page is raised above the login page. The frame on top will be the frame that is visible.
 """
 
-### globals self.variables ###
+### globals ###
 CONFIG_FILE_PATH = 'config.ini'
 config = configparser.ConfigParser() # TO-DO: TRY CATCH error here to see if found config
 config.read(CONFIG_FILE_PATH)
@@ -59,16 +57,14 @@ class LoginPage(tk.Frame):
         self.controller = controller
         self.attempt_count = 1
         
-        ### input fields ###
+        # input fields
         self.login_label = tk.Label(self, text="Key Password: ", font=controller.title_font)
         self.login_entry = tk.Entry(self, show='*')
         self.login_label.grid(row=0, column=0)
         self.login_entry.grid(row=0, column=1)
 
         # submit button
-        self.submit_btn = tk.Button(self, text="Submit",
-                            command=self.submit_btn_click)
-
+        self.submit_btn = tk.Button(self, text="Submit",command=self.submit_btn_click)
         self.submit_btn.grid(row=1, column=2)
     
     def submit_btn_click(self):
@@ -93,16 +89,19 @@ class MainPage(tk.Frame):
         password = self.password_entry.get()
         email = self.email_entry.get()
 
-        # correct input
+        # missing input
         if (title == "" or email == "" or password == ""):
             self.incorrect_input_label.grid_forget()
             self.incorrect_input_label.grid(row=5, column=0, columnspan=2, sticky='w')
-        # missing input
+        # correct input
         else:
             DB.insert(title, username, password, email)
 
             self.options = DB.select_entries()
-            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_account)
+            self.display_RHS(self.options[-1:][0][0]) # get most recent entry_no
+            self.variable.set(self.options[-1:]) # display most recent entry
+
+            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_RHS)
             drop.grid(row=1, column=3) 
 
             self.title_entry.delete(0, 'end')
@@ -110,9 +109,8 @@ class MainPage(tk.Frame):
             self.password_entry.delete(0, 'end')
             self.email_entry.delete(0, 'end')
             self.incorrect_input_label.grid_forget()
-
         
-    def display_account(self, value):
+    def display_RHS(self, value):
         data = DB.get_entry(entry_no=str(value[0]))
         username = data[0][2]
         email = data[0][4]
@@ -120,7 +118,6 @@ class MainPage(tk.Frame):
         # update labels
         self.RHS_username_label.config(text=username, font="arial 16")
         self.RHS_email_label.config(text=email, font="arial 16")
-
         self.RHS_username_label.grid(row=2, column=3)   
         self.RHS_email_label.grid(row=3, column=3)    
 
@@ -150,7 +147,7 @@ class MainPage(tk.Frame):
         self.RHS_email_label.grid(row=3, column=3)    
 
     def create_widgets(self):
-        ### left hand side (LHS) ###
+        ### left hand side (LHS) widgets ###
         # heading
         self.label_heading = tk.Label(self, text="Add entry", font='arial 24')
         self.label_heading.grid(row=0, column=0, sticky='w')
@@ -178,39 +175,39 @@ class MainPage(tk.Frame):
         # submit button
         self.submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.submit_btn_click)
         self.submit_btn.grid(row=5, column=1, sticky='e')   
-        self.incorrect_input_label = tk.Label(self, text=f"incorrect input", fg='red')      
+        self.incorrect_input_label = tk.Label(self, text=f"missing input", fg='red')      
 
-        ### Right hand side (RHS) content ###
-        # initialise values
-        self.RHS_username_label = tk.Label(self, text="*", font="arial 16") 
-        self.RHS_email_label = tk.Label(self, text="*", font="arial 16")  
-
-        self.RHS_username_label.grid(row=2, column=3)   
-        self.RHS_email_label.grid(row=3, column=3)   
-
-        # title
+        ### Right hand side (RHS) widgets ###
+        # heading
         self.label_heading2 = tk.Label(self, text="Accounts:", font='arial 24')
         self.label_heading2.grid(row=0, column=3, columnspan=2)
-        # dropdown menu
+
+        # initialise labels
+        self.RHS_username_label = tk.Label(self, text="*", font="arial 16") 
+        self.RHS_email_label = tk.Label(self, text="*", font="arial 16")  
+        self.RHS_username_label.grid(row=2, column=3)   
+        self.RHS_email_label.grid(row=3, column=3)
+
+        # initialise dropdown menu values
         DB.select_entries()
         self.options = DB.select_entries()
-
         self.variable = tk.StringVar()
 
         if (not(DB.is_empty())):
             self.variable.set(self.options[0])
-            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_account)
+            self.display_RHS(self.options[0])
+            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_RHS)
         else:
             self.variable.set('...')
             drop = tk.OptionMenu(self, self.variable, '...')
 
         drop.grid(row=1, column=3)
 
-        # get password
+        # get password button
         self.password_btn = tk.Button(self, text="password", font='arial 16', command=self.password_btn_click)
         self.password_btn.grid(row=4, column=3)
 
-        # reset database entries
+        # reset database button
         self.reset_btn = tk.Button(self, text="reset", font='arial 12', command=self.reset_btn_click)
         self.reset_btn.grid(row=5, column=3)
 
