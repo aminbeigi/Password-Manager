@@ -83,16 +83,16 @@ class Database:
         self.cursor.execute(add_entry, data_entry)
 
         self.cnx.commit()
-    
+
     def select_entries(self):
-        # select lst
+        # select all entry_no, title columns from database
         query = ("SELECT entry_no, title FROM user_entries")
         self.cursor.execute(query)
         output = self.cursor.fetchall()
         return output
 
     def get_entry(self, entry_no):
-        # selects...
+        # select all columns from database
         query = (f"""SELECT * FROM user_entries 
                 WHERE entry_no = '{entry_no}'""")
         self.cursor.execute(query)
@@ -105,22 +105,22 @@ class Database:
                 WHERE entry_no = '{entry_no}'""")
         self.cursor.execute(query)
         output = self.cursor.fetchall()[0][0]
-
         decrypted_password = self.encryption.decrypt(output)
-
         return decrypted_password.decode() # change from bytes to string
 
     def get_highest_id(self):
         query = (f"SELECT MAX(entry_no) FROM user_entries")
         self.cursor.execute(query)
         output = self.cursor.fetchall()[0][0]
-        
-        return output
+
+        if (output != None):
+            return output
+        else:
+            return 0
 
 def main():
     db = Database()
-    db.insert('bob jane', 'steve123', 'p@ssw0rd', 'me@aminbeigi.com')
-
+    db.insert('bob jane2', 'steve123', 'p@ssw0rd', 'me@aminbeigi.com')
 
 if __name__ == '__main__':
     main()
