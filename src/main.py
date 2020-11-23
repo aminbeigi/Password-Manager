@@ -18,8 +18,6 @@ DB = database.Database() # initialise database
 
 MASTER_PASSWORD = CONFIG.get('LOGIN', 'master_password')
 
-
-
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -64,11 +62,11 @@ class LoginPage(tk.Frame):
         self.login_label.grid(row=0, column=0)
         self.login_entry.grid(row=0, column=1)
 
-        # submit button
-        self.submit_btn = tk.Button(self, text="Submit",command=self.submit_btn_clicked)
-        self.submit_btn.grid(row=1, column=2)
+        # login button
+        self.login_btn = tk.Button(self, text="Login",command=self.login_btn_clicked)
+        self.login_btn.grid(row=1, column=2)
     
-    def submit_btn_clicked(self):
+    def login_btn_clicked(self):
         password = self.login_entry.get()
         if (password == MASTER_PASSWORD):
             self.controller.show_frame('MainPage')
@@ -92,7 +90,7 @@ class MainPage(tk.Frame):
 
         # missing input
         if (title == "" or email == "" or password == ""):
-            self.incorrect_input_label.grid_forget()
+            self.reset_labels()
             self.incorrect_input_label.grid(row=5, column=0, columnspan=2, sticky='w')
         # correct input
         else:
@@ -111,14 +109,10 @@ class MainPage(tk.Frame):
             self.username_entry.delete(0, 'end')
             self.password_entry.delete(0, 'end')
             self.email_entry.delete(0, 'end')
-            self.incorrect_input_label.grid_forget()
+            
+            self.reset_labels()
         
     def display_RHS(self, value):
-        '''
-        data = DB.get_entry(entry_no=str(value[0]))
-        username = data[0][2]
-        email = data[0][4]
-        '''
         entry_no = value[0]
         username = DB.get_username(entry_no)
         email = DB.get_email(entry_no)
@@ -136,9 +130,8 @@ class MainPage(tk.Frame):
             pyperclip.copy(password)
 
             # text
-            self.incorrect_input_label.grid_forget()
-            self.clipboard_label = tk.Label(self, text=f"copied to clipboard!", fg='green')
-            self.clipboard_label.grid(row=5, column=0) 
+            self.reset_labels()
+            self.display_clipboard_label()
     
     def reset_btn_click(self):
         if (not(DB.is_empty())):
@@ -152,7 +145,15 @@ class MainPage(tk.Frame):
         self.RHS_username_label.config(text='*', font="arial 16")
         self.RHS_email_label.config(text='*', font="arial 16")
         self.RHS_username_label.grid(row=2, column=3)   
-        self.RHS_email_label.grid(row=3, column=3)    
+        self.RHS_email_label.grid(row=3, column=3)
+
+    def reset_labels(self):
+         self.incorrect_input_label.grid_forget()
+         self.clipboard_label.grid_forget()
+    
+    def display_clipboard_label():
+        self.clipboard_label = tk.Label(self, text=f"copied to clipboard!", fg='green')
+        self.clipboard_label.grid(row=5, column=0)         
 
     def create_widgets(self):
         ### left hand side (LHS) widgets ###
@@ -183,6 +184,7 @@ class MainPage(tk.Frame):
         # submit button
         self.submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.submit_btn_clicked)
         self.submit_btn.grid(row=5, column=1, sticky='e')   
+        
         self.incorrect_input_label = tk.Label(self, text=f"missing input", fg='red')      
 
         ### Right hand side (RHS) widgets ###
@@ -195,6 +197,9 @@ class MainPage(tk.Frame):
         self.RHS_email_label = tk.Label(self, text="*", font="arial 16")  
         self.RHS_username_label.grid(row=2, column=3)   
         self.RHS_email_label.grid(row=3, column=3)
+
+        self.clipboard_label = tk.Label(self, text=f"copied to clipboard!", fg='green')
+        self.clipboard_label.grid(row=5, column=0)  
 
         # initialise dropdown menu values
         DB.select_entries()
