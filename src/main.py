@@ -17,6 +17,8 @@ config = configparser.ConfigParser() # TO-DO: TRY CATCH error here to see if fou
 config.read(CONFIG_FILE_PATH)
 MASTER_PASSWORD = config.get('LOGIN', 'master_password')
 
+DB = database.Database() # initialise database
+
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -84,8 +86,6 @@ class MainPage(tk.Frame):
         self.controller = controller
         self.create_widgets()
 
-        self.db = database.Database() # initialise database
-
     def on_submit(self):
         title = self.title_entry.get()
         username = self.username_entry.get()
@@ -94,7 +94,7 @@ class MainPage(tk.Frame):
 
         # correct input
         if (title != "" and email != "" and password != ""):
-            self.db.insert(title, username, password, email)
+            DB.insert(title, username, password, email)
 
             self.title_entry.delete(0, 'end')
             self.username_entry.delete(0, 'end')
@@ -136,7 +136,7 @@ class MainPage(tk.Frame):
         self.incorrect_input_label = tk.Label(self, text=f"empty input box/boxes.", fg='red')
 
         ### empty seperator coloumn
-        self.empty_column = tk.Label(self, text="---------------")
+        self.empty_column = tk.Label(self, text="----------")
         self.empty_column.grid(row=0, column=2)       
 
         ### stuff on the right ###
@@ -144,9 +144,8 @@ class MainPage(tk.Frame):
         self.label_heading2 = tk.Label(self, text="Accounts:", font='arial 24')
         self.label_heading2.grid(row=0, column=3, columnspan=2)
         # dropdown menu
-        options = [
-            "Ebay"
-        ]
+        DB.select_entries()
+        options = DB.select_entries()
 
         on_click = tk.StringVar()
         on_click.set(options[0])
