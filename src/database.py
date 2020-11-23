@@ -83,7 +83,6 @@ class Database:
         self.cursor.execute(add_entry, data_entry)
 
         self.cnx.commit()
-        print("Created new column.")
     
     def select_entries(self):
         # select lst
@@ -106,11 +105,14 @@ class Database:
                 WHERE entry_no = '{entry_no}'""")
         self.cursor.execute(query)
         output = self.cursor.fetchall()[0][0]
-        return self.encryption.decrypt(output)
+
+        decrypted_password = self.encryption.decrypt(output)
+        return decrypted_password.decode() # change from bytes to string
 
 def main():
     test = Database()
-    test.get_password(2)
+    #test.insert('minecraft', 'steve123', 'p@ssw0rd', 'me@aminbeigi.com')
+    #print(test.get_password('2'))
 
 
 if __name__ == '__main__':
