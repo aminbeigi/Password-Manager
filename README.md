@@ -1,5 +1,5 @@
 <p align="center">
-<img src="src/images/lock.png" /><br/>
+<img src="src/images/lock.png" width="256" height="256"/><br/>
 <h3 align="center">Password Manager</h3>
 <p align="center">A password manager created in Python using Tkinter.</p>
 <h2></h2>
