@@ -17,12 +17,15 @@ PASSWORD = config.get('mySQL', 'password')
 HOST = config.get('mySQL', 'host')
 DATABASE = config.get('mySQL', 'database')
 
-### tables
+### SQL code to create tables
 TABLES = {}
 TABLES['user_entries'] = (
     "CREATE TABLE `user_entries` ("
-    "  `entry_no` varchar(50) NOT NULL,"
+    "  `entry_no` char(3) NOT NULL,"
     "  `title` varchar(50) NOT NULL,"
+    "  `username` varchar(50),"
+    "  `password` varchar(50) NOT NULL,"
+    "  `email` varchar(50) NOT NULL,"    
     "  PRIMARY KEY (`entry_no`)"    
     ") ENGINE=InnoDB")
 
@@ -43,11 +46,13 @@ class Database:
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
                 print("Database does not exist")
             else:
-                print(err)
-        self.create_tables()        
+                print(err)  
+          
+        self.create_table()   
 
-    def create_tables(self):
+    def create_table(self):
         for table_name in TABLES:
+            print(table_name)
             table_description = TABLES[table_name]
             try:
                 print("Creating table {}: ".format(table_name), end='')
@@ -60,18 +65,18 @@ class Database:
             else:
                 print("OK")   
 
-    def insert(self):
+    def insert(self, title, username, password, email):
         add_entry = ("INSERT INTO user_entries "
-                    "(entry_no, title) "
-                    "VALUES (%s, %s)") 
+                    "(entry_no, title, username, password, email) "
+                    "VALUES (%s, %s, %s, %s, %s)") 
 
-        data_entry = (1, 'minecraft')
+        data_entry = ('2', title, username, password, email)
         
         # insert new entry 
         self.cursor.execute(add_entry, data_entry)
 
         self.cnx.commit()
-        print("Created new table.")
+        print("Created new column.")
     
     def select(self):
         # select the password
@@ -82,8 +87,8 @@ class Database:
         return output
 
 def main():
-    db = Database()
-    print(db.select())
+    test = Database()
+    test.insert()
 
 if __name__ == '__main__':
     main()    
