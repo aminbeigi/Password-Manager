@@ -133,6 +133,3 @@ src/tempCodeRunnerFile.py
 
 # config.ini file
 src/config.ini
-
-# Password file
-src/passwords.txt
