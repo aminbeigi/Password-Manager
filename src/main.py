@@ -96,11 +96,11 @@ class MainPage(tk.Frame):
         else:
             DB.insert(title, username, password, email)
 
-            self.options = DB.select_entries()
+            self.options = DB.select_all_entry_no_and_title()
             self.display_RHS(DB.get_highest_id()) # get most recent entry_no
 
-            self.variable.set(self.options[-1:][0]) # display most recent entry
-            print(self.options[-1:][0])
+            pretty_output = DB.get_highest_id() + ". " + DB.get_title(DB.get_highest_id())
+            self.variable.set(pretty_output) # display most recent entry
 
             drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_RHS)
             drop.grid(row=1, column=3) 
@@ -197,14 +197,25 @@ class MainPage(tk.Frame):
         self.RHS_email_label.grid(row=3, column=3)  
 
         # initialise dropdown menu values
-        DB.select_entries()
-        self.options = DB.select_entries()
+        DB.select_all_entry_no_and_title()
+        self.options = DB.select_all_entry_no_and_title()
+        print(self.options)
         self.variable = tk.StringVar()
 
         if (not(DB.is_empty())):
             self.variable.set(self.options[0])
             self.display_RHS(self.options[0])
-            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_RHS)
+
+            pretty_output = "1" + ". " + DB.get_title('1')
+            self.variable.set(pretty_output) # display most recent entry
+
+            pretty_options = []
+            for i in self.options:
+                format_string = i[0] + ". " + i[1]
+                pretty_options.append(format_string)
+                print(i)
+
+            drop = tk.OptionMenu(self, self.variable, *pretty_options, command=self.display_RHS)
         else:
             self.variable.set('...')
             drop = tk.OptionMenu(self, self.variable, '...')
