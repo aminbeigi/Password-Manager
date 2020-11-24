@@ -18,3 +18,7 @@ class Encryption:
     def decrypt(self, token):
         token = token.encode() # to bytes
         return Fernet(KEY).decrypt(token)
+    
+    # Generating a key for config.ini
+    def generate_key(self):
+        return Fernet.generate_key()
