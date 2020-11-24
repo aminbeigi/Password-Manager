@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import font as tkfont 
+import os 
+import sys
 import pyperclip
 import static_config_parser
 import database
@@ -10,6 +12,8 @@ A simple password manager with two frames - login page and the main page. Requir
 The two frames are stacked on top of each other, once the correct password is inputted
 the main page is raised above the login page. The frame on top will be the frame that is visible.
 """
+# Set CWD to script directory
+os.chdir(sys.path[0])
 
 ### globals ###
 DB = database.Database()
@@ -123,7 +127,7 @@ class MainPage(tk.Frame):
 
     def password_btn_click(self):
         if (not(DB.is_empty())):
-            entry_no = self.variable.get()[2]
+            entry_no = self.variable.get()[0] # e.g. '1. Runescape'
             password = DB.get_password(entry_no)
             pyperclip.copy(password)
 
@@ -241,7 +245,7 @@ class MainPage(tk.Frame):
 def main():
     app = Application()
     app.title("Password Manager")
-    app.iconbitmap('images/icon.ico')
+    app.iconbitmap('../images/icon.ico')
     app.mainloop()
 
 if __name__ == '__main__':
