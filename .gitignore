@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # Visual Studio Code
-src/tempCodeRunnerFile.py
+passwordmanager/tempCodeRunnerFile.py
 
 # config.ini file
 config/config.ini
