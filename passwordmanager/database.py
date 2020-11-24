@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 from .encryption import *
-from .static_config_parser import *
+from .staticconfigparser import *
 
 """The database
 

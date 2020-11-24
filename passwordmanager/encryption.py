@@ -1,5 +1,5 @@
 from cryptography.fernet import Fernet
-from .static_config_parser import *
+from .staticconfigparser import *
 
 """Symmetric key encryption
 

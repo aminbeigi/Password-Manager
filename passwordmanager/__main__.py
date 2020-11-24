@@ -3,8 +3,8 @@ from tkinter import font as tkfont
 import os 
 import sys
 import pyperclip
-from .static_config_parser  import *
-from .database  import *
+from .staticconfigparser import *
+from .database import *
 
 """Simple Password manager.
 
@@ -17,7 +17,7 @@ os.chdir(sys.path[0])
 
 ### globals ###
 DB = Database()
-
+print("It updated2")
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
