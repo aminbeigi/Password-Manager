@@ -12,7 +12,7 @@ the main page is raised above the login page. The frame on top will be the frame
 """
 
 ### globals ###
-DB = database.Database() # initialise database
+DB = database.Database()
 
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -152,8 +152,8 @@ class MainPage(tk.Frame):
     def update_options_menu(self):
         pretty_options = []
         for entry in self.options:
-            format_string = entry[0] + ". " + entry[1]
-            pretty_options.append(format_string)
+            formatted_string = entry[0] + ". " + entry[1]
+            pretty_options.append(formatted_string)
 
         drop = tk.OptionMenu(self, self.variable, *pretty_options, command=self.display_RHS)
         drop.grid(row=1, column=3)
@@ -188,11 +188,11 @@ class MainPage(tk.Frame):
         self.submit_btn = tk.Button(self, text="Submit", font='arial 16', command=self.submit_btn_clicked)
         self.submit_btn.grid(row=5, column=1, sticky='e') 
 
-        # initialise bottom left labels
+        # initialise clipboard and incorrect input label
         self.clipboard_label = tk.Label(self, text=f"copied to clipboard!", fg='green')
         self.incorrect_input_label = tk.Label(self, text=f"missing input", fg='red')   
              
-        ### Right hand side (RHS) widgets ###
+        ### right hand side (RHS) widgets ###
         # heading
         self.label_heading2 = tk.Label(self, text="Accounts:", font='arial 24')
         self.label_heading2.grid(row=0, column=3, columnspan=2)
@@ -203,24 +203,21 @@ class MainPage(tk.Frame):
         self.RHS_username_label.grid(row=2, column=3)   
         self.RHS_email_label.grid(row=3, column=3)  
 
-        # initialise dropdown menu values
-        DB.select_all_entry_no_and_title()
+        # initialise option menu values
         self.options = DB.select_all_entry_no_and_title()
         print(self.options)
         self.variable = tk.StringVar()
 
         if (not(DB.is_empty())):
-            self.variable.set(self.options[0])
-            self.display_RHS(self.options[0])
-
-            pretty_output = "1" + ". " + DB.get_title('1')
-            self.variable.set(pretty_output) # display most recent entry
+            self.display_RHS(self.options[0]) # show the first username and email
 
             pretty_options = []
             for i in self.options:
-                format_string = i[0] + ". " + i[1]
-                pretty_options.append(format_string)
+                formatted_string = i[0] + ". " + i[1]
+                pretty_options.append(formatted_string)
+            print("hi", pretty_options)
 
+            self.variable.set(pretty_options[0]) # show first entry_no and title
             drop = tk.OptionMenu(self, self.variable, *pretty_options, command=self.display_RHS)
         else:
             self.variable.set('...')
