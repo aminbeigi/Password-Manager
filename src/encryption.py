@@ -3,7 +3,7 @@ import static_config_parser
 
 """Symmetric key encryption
 
-Using the Fernet recipie via the cyrptography module to encrypt passwords in main.py.
+Using the Fernet recipie from the cyrptography module to encrypt passwords in main.py.
 """
 
 ### globals variables ###

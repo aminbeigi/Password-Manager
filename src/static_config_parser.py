@@ -1,4 +1,5 @@
 import configparser
+"""A config parser that is used by the modules main, database and encryption."""
 
 class StaticConfigParser():
     CONFIG_FILE_PATH = 'config.ini'
