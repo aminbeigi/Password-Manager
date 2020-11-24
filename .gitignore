@@ -132,4 +132,4 @@ dmypy.json
 src/tempCodeRunnerFile.py
 
 # config.ini file
-src/config.ini
+config/config.ini
