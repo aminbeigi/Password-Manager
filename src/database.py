@@ -121,7 +121,7 @@ class Database:
                 WHERE entry_no = '{entry_no}'""")
         self.cursor.execute(query)
         output = self.cursor.fetchall()[0][0]
-        decrypted_password = self.encryption.decrypt(output, key)
+        decrypted_password = self.encryption.decrypt(output, KEY)
         return decrypted_password.decode() # change from bytes to string
 
     def get_highest_id(self):
