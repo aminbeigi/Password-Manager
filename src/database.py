@@ -17,6 +17,9 @@ PASSWORD = CONFIG.get('mySQL', 'password')
 HOST = CONFIG.get('mySQL', 'host')
 DATABASE = CONFIG.get('mySQL', 'database')
 
+### encryption
+KEY = CONFIG.get('MAIN', 'key')
+
 ### SQL code to create tables
 TABLES = {}
 TABLES['user_entries'] = (
@@ -71,7 +74,7 @@ class Database:
                     "(entry_no, title, username, password, email) "
                     "VALUES (%s, %s, %s, %s, %s)") 
 
-        encrypted_password = self.encryption.encrypt(password)
+        encrypted_password = self.encryption.encrypt(password, KEY)
 
         data_entry = ((str(int(self.get_highest_id())+1)), title, username, encrypted_password, email)
         
@@ -118,7 +121,7 @@ class Database:
                 WHERE entry_no = '{entry_no}'""")
         self.cursor.execute(query)
         output = self.cursor.fetchall()[0][0]
-        decrypted_password = self.encryption.decrypt(output)
+        decrypted_password = self.encryption.decrypt(output, key)
         return decrypted_password.decode() # change from bytes to string
 
     def get_highest_id(self):
@@ -146,8 +149,9 @@ class Database:
 
 def main():
     db = Database()
-    print(db.get_username('2'))
+    #print(db.get_username('2'))
     #print(db.select_all_entry_no_and_title())
+    print(db.get_password('1'))
 
 if __name__ == '__main__':
     main()
