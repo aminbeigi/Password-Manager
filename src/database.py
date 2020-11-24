@@ -81,7 +81,7 @@ class Database:
 
         self.cnx.commit()
 
-    def select_entries(self):
+    def select_all_entry_no_and_title(self):
         # select ALL rows with 'entry_no' and 'title' columns from database
         query = ("SELECT entry_no, title FROM user_entries")
         self.cursor.execute(query)
@@ -148,7 +148,7 @@ class Database:
 def main():
     db = Database()
     print(db.get_username('2'))
-    #print(db.select_entries())
+    #print(db.select_all_entry_no_and_title())
 
 if __name__ == '__main__':
     main()
