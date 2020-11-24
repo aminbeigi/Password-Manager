@@ -1,8 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
-import configparser
 import encryption
-from my_configparser import MyConfigParser
+import static_config_parser
 
 """The database
 
@@ -11,7 +10,7 @@ the user has inputted in main.py.
 """
 
 ### globals variables ###
-CONFIG = MyConfigParser()
+CONFIG = static_config_parser.StaticConfigParser()
 
 USER = CONFIG.get('mySQL', 'user')
 PASSWORD = CONFIG.get('mySQL', 'password')

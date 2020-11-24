@@ -1,9 +1,8 @@
 import tkinter as tk
 from tkinter import font as tkfont 
-import configparser
 import pyperclip
+import static_config_parser
 import database
-from my_configparser import MyConfigParser
 
 """Simple Password manager.
 
@@ -13,10 +12,7 @@ the main page is raised above the login page. The frame on top will be the frame
 """
 
 ### globals ###
-CONFIG = MyConfigParser()
 DB = database.Database() # initialise database
-
-MASTER_PASSWORD = CONFIG.get('LOGIN', 'master_password')
 
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -55,6 +51,9 @@ class LoginPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.attempt_count = 1
+
+        config = static_config_parser.StaticConfigParser()
+        self.master_password = config.get('LOGIN', 'master_password')
         
         # input fields
         self.login_label = tk.Label(self, text="Master Password: ", font='arial 24')
@@ -68,7 +67,7 @@ class LoginPage(tk.Frame):
     
     def login_btn_clicked(self):
         password = self.login_entry.get()
-        if (password == MASTER_PASSWORD):
+        if (password == self.master_password):
             self.controller.show_frame('MainPage')
         # incorrect password
         self.incorrect_password_label = tk.Label(self, text=f"Incorrect password({self.attempt_count})", fg='red')
@@ -102,8 +101,7 @@ class MainPage(tk.Frame):
             pretty_output = DB.get_highest_id() + ". " + DB.get_title(DB.get_highest_id())
             self.variable.set(pretty_output) # display most recent entry
 
-            drop = tk.OptionMenu(self, self.variable, *self.options, command=self.display_RHS)
-            drop.grid(row=1, column=3) 
+            self.update_options_menu()
 
             self.title_entry.delete(0, 'end')
             self.username_entry.delete(0, 'end')
@@ -148,8 +146,17 @@ class MainPage(tk.Frame):
         self.RHS_email_label.grid(row=3, column=3)
 
     def reset_labels(self):
-         self.incorrect_input_label.grid_forget()
-         self.clipboard_label.grid_forget()   
+        self.incorrect_input_label.grid_forget()
+        self.clipboard_label.grid_forget()
+    
+    def update_options_menu(self):
+        pretty_options = []
+        for entry in self.options:
+            format_string = entry[0] + ". " + entry[1]
+            pretty_options.append(format_string)
+
+        drop = tk.OptionMenu(self, self.variable, *pretty_options, command=self.display_RHS)
+        drop.grid(row=1, column=3)
 
     def create_widgets(self):
         ### left hand side (LHS) widgets ###
@@ -213,7 +220,6 @@ class MainPage(tk.Frame):
             for i in self.options:
                 format_string = i[0] + ". " + i[1]
                 pretty_options.append(format_string)
-                print(i)
 
             drop = tk.OptionMenu(self, self.variable, *pretty_options, command=self.display_RHS)
         else:
