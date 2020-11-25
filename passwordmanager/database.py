@@ -144,5 +144,4 @@ class Database:
         output = self.cursor.fetchall()[0][0]
         if (output == 0):
             return True
-        else:
-            return False
+        return False
