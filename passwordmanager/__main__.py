@@ -18,7 +18,7 @@ os.chdir(sys.path[0])
 
 ### globals ###
 DB = Database()
-print(__doc__)
+
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
