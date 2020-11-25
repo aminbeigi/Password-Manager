@@ -1,11 +1,11 @@
 import mysql.connector
 from mysql.connector import errorcode
-from .encryption import *
-from .static_config_parser import *
+from .encryption import Encryption
+from .static_config_parser import StaticConfigParser
 
-"""The database
+"""The mySQL database holding all user entries
 
-This database will hold one table 'user_entries' that will contain all the entries
+The mySQL database will hold one table 'user_entries' that will contain all the entries
 the user has inputted in main.py.
 """
 

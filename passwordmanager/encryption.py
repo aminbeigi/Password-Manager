@@ -1,9 +1,10 @@
 from cryptography.fernet import Fernet
-from .static_config_parser import *
+from .static_config_parser import StaticConfigParser
 
 """Symmetric key encryption
 
-Using the Fernet recipie from the cyrptography module to encrypt passwords in main.py.
+Using the Fernet recipie from the cyrptography module to encrypt passwords.
+This module is used to encrypt and decrypt passwords in database.py.
 """
 
 class Encryption:
@@ -13,6 +14,6 @@ class Encryption:
     def decrypt(self, token, key):
         return Fernet(key).decrypt(token.encode()).decode() # returns string
     
-    # Generating a key for config.ini
+    # generating a key for config.ini
     def generate_key(self):
         return Fernet.generate_key()
