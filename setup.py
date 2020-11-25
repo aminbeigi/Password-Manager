@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='Password Manager',
+    name='passwordmanager',
     version='1.0.0',
-    description='',
+    description='An open source account manager.',
     packages=['passwordmanager'],
-    license='',
-    author='',
-    author_email='',
-    url=''
+    license='MIT',
+    author='Amin Ghasembeigi',
+    author_email='me@aminbeigi.com',
+    url='https://github.com/aminbeigi/Password-Manager'
 )
