@@ -12,7 +12,7 @@
 </p>
 
 ## Description
-A password manager that allows you to store your emails, password and account information.  
+A password manager that allows you to store your account information such as usernames, emails and passwords.  
 User entries are stored inside a mySQL database. Passwords are encrypted using the Fernet recipe (symmetric key encryption)
 before being placed in the database.
 
