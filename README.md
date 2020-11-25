@@ -22,7 +22,7 @@ before being placed in the database.
 ## Requirements
 * Python 3.8.2+
 * TK version 8.6+
-* cryptography 3.2.1
+* cryptography 3.2.1+
 * pyperclip 1.8.0+
 * configparser 5.0.0+
 * mysql-connector-python 8.0.21+
