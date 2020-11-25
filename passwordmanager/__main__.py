@@ -3,13 +3,14 @@ from tkinter import font as tkfont
 import os 
 import sys
 import pyperclip
-from .static_config_parser import *
-from .database import *
+from .static_config_parser import StaticConfigParser
+from .database import Database
 
-"""Simple Password manager.
+"""A password manager, GUI created in tktinker.
 
-A simple password manager with two frames - login page and the main page. Requires input in config.ini. 
-The two frames are stacked on top of each other, once the correct password is inputted
+Password-Manager is a password manager. Passwords are encrypted then stored in
+a mySQL database, which is locked with a master key via the login page.
+The login page and the main page are stacked on top of each other, once the correct master password is inputted
 the main page is raised above the login page. The frame on top will be the frame that is visible.
 """
 # Set CWD to script directory
@@ -125,7 +126,7 @@ class MainPage(tk.Frame):
         self.RHS_username_label.grid(row=2, column=3)   
         self.RHS_email_label.grid(row=3, column=3)    
 
-    def password_btn_click(self):
+    def password_btn_clicked(self):
         if (not(DB.is_empty())):
             entry_no = self.variable.get()[0] # e.g. '1. Runescape'
             password = DB.get_password(entry_no)
@@ -135,11 +136,6 @@ class MainPage(tk.Frame):
             self.reset_labels()
             self.clipboard_label.grid(row=5, column=0)
     
-    def reset_btn_click(self):
-        if (not(DB.is_empty())):
-            DB.clear_table()
-            self.reset_RHS_conent()
-    
     def reset_RHS_conent(self):
         self.variable.set('...')
         drop = tk.OptionMenu(self, self.variable, '...')
@@ -148,6 +144,11 @@ class MainPage(tk.Frame):
         self.RHS_email_label.config(text='*', font="arial 16")
         self.RHS_username_label.grid(row=2, column=3)   
         self.RHS_email_label.grid(row=3, column=3)
+
+    def reset_btn_click(self):
+        if (not(DB.is_empty())):
+            DB.clear_table()
+            self.reset_RHS_conent()
 
     def reset_labels(self):
         self.incorrect_input_label.grid_forget()
@@ -228,7 +229,7 @@ class MainPage(tk.Frame):
         drop.grid(row=1, column=3)
 
         # get password button
-        self.password_btn = tk.Button(self, text="password", font='arial 16', command=self.password_btn_click)
+        self.password_btn = tk.Button(self, text="password", font='arial 16', command=self.password_btn_clicked)
         self.password_btn.grid(row=4, column=3)
 
         # reset database button
