@@ -12,13 +12,21 @@
 </p>
 
 ## Description
-A basic GUI that allows you to store your emails, password and account information.  
-Plain text passwords stored inside `password.txt` are encrytped using the Fernet recipe (symmetric key encryption).
+A password manager that allows you to store your emails, password and account information.  
+User entries are stored inside a mySQL database. Passwords are encrypted using the Fernet recipe (symmetric key encryption)
+before being placed in the database.
+
+## Example
+![](https://i.imgur.com/KdrfvE6.gif)
 
 ## Requirements
-* TK version 8.6+
 * Python 3.8.2+
-* cryptography (Python module)
+* TK version 8.6+
+* cryptography
+* pyperclip
+* configparser
+* mysql.connector
+
 ## Contributions
 Contributions are always welcome!  
 Just make a [pull request](../../pulls).
