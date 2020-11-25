@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 from .encryption import *
-from .staticconfigparser import *
+from .static_config_parser import *
 
 """The database
 
@@ -122,7 +122,7 @@ class Database:
         self.cursor.execute(query)
         output = self.cursor.fetchall()[0][0]
         decrypted_password = self.encryption.decrypt(output, KEY)
-        return decrypted_password.decode() # change from bytes to string
+        return decrypted_password # change from bytes to string
 
     def get_highest_id(self):
         if (self.is_empty()):

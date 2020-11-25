@@ -3,7 +3,7 @@ from tkinter import font as tkfont
 import os 
 import sys
 import pyperclip
-from .staticconfigparser import *
+from .static_config_parser import *
 from .database import *
 
 """Simple Password manager.
@@ -17,7 +17,7 @@ os.chdir(sys.path[0])
 
 ### globals ###
 DB = Database()
-print("It updated2")
+
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -209,7 +209,6 @@ class MainPage(tk.Frame):
 
         # initialise option menu values
         self.options = DB.select_all_entry_no_and_title()
-        print(self.options)
         self.variable = tk.StringVar()
 
         if (not(DB.is_empty())):
@@ -219,7 +218,6 @@ class MainPage(tk.Frame):
             for i in self.options:
                 formatted_string = i[0] + ". " + i[1]
                 pretty_options.append(formatted_string)
-            print("hi", pretty_options)
 
             self.variable.set(pretty_options[0]) # show first entry_no and title
             drop = tk.OptionMenu(self, self.variable, *pretty_options, command=self.display_RHS)
