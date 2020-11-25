@@ -122,7 +122,7 @@ class Database:
         self.cursor.execute(query)
         output = self.cursor.fetchall()[0][0]
         decrypted_password = self.encryption.decrypt(output, KEY)
-        return decrypted_password # change from bytes to string
+        return decrypted_password
 
     def get_highest_id(self):
         if (self.is_empty()):
