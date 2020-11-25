@@ -146,12 +146,3 @@ class Database:
             return True
         else:
             return False
-
-def main():
-    db = Database()
-    #print(db.get_username('2'))
-    #print(db.select_all_entry_no_and_title())
-    print(db.get_password('1'))
-
-if __name__ == '__main__':
-    main()
