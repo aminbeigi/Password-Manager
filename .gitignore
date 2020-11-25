@@ -133,3 +133,6 @@ passwordmanager/tempCodeRunnerFile.py
 
 # config.ini file
 config/config.ini
+
+# README.MD files
+readme_stuff/*
