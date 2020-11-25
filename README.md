@@ -1,7 +1,7 @@
 <p align="center">
-<img src="src/images/lock.png" width="256" height="213"/><br/>
+<img src="images/lock.png" width="256" height="213"/><br/>
 <h3 align="center">Password Manager</h3>
-<p align="center">A password manager created in Python using Tkinter.</p>
+<p align="center">A password manager created in Python, GUI using Tkinter module.</p>
 <h2></h2>
 </p>
 <br />
@@ -12,13 +12,21 @@
 </p>
 
 ## Description
-A basic GUI that allows you to store your emails, password and account information.  
-Plain text passwords stored inside `password.txt` are encrytped using the Fernet recipe (symmetric key encryption).
+A password manager that allows you to store your account information such as usernames, emails and passwords.  
+User entries are stored inside a mySQL database. Passwords are encrypted using the Fernet recipe (symmetric key encryption)
+before being placed in the database.
+
+## Example
+![](https://i.imgur.com/KdrfvE6.gif)
 
 ## Requirements
-* TK version 8.6+
 * Python 3.8.2+
-* cryptography (Python module)
+* TK version 8.6+
+* cryptography 3.2.1
+* pyperclip 1.8.0+
+* configparser 5.0.0+
+* mysql-connector-python 8.0.21+
+
 ## Contributions
 Contributions are always welcome!  
 Just make a [pull request](../../pulls).
