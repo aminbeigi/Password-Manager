@@ -75,12 +75,10 @@ class Database:
                     "VALUES (%s, %s, %s, %s, %s)") 
 
         encrypted_password = self.encryption.encrypt(password, KEY)
-
         data_entry = ((str(int(self.get_highest_entry_no())+1)), title, username, encrypted_password, email)
         
         # insert new entry
         self.cursor.execute(add_entry, data_entry)
-
         self.cnx.commit()
 
     def select_all_entry_no_and_title(self):
