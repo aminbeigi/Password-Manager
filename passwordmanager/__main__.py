@@ -149,8 +149,9 @@ class MainPage(tk.Frame):
         self.confirmation_popup()
 
     def confirmation_popup(self):
-        if not(self.currently_displaying_popup):
+        if self.currently_displaying_popup == False:
             win = tk.Toplevel()
+            print(win)
             win.wm_title("Confirmation Window")
             disclaimer = "Are you sure you want to delete ALL entries?"
             self.disclaimer_label = tk.Label(win, text=disclaimer)  
@@ -172,6 +173,7 @@ class MainPage(tk.Frame):
 
     # confirmation popup button
     def no_btn_clicked(self):
+        print("NO")
         self.currently_displaying_popup = False
 
     def reset_labels(self):
