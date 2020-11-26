@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import font as tkfont 
+from tkinter import font as tkfont
+from tkinter.messagebox import showinfo
 import os 
 import sys
 import pyperclip
@@ -146,7 +147,10 @@ class MainPage(tk.Frame):
         self.RHS_email_label.grid(row=3, column=3)
 
     def reset_btn_clicked(self):
-        self.confirmation_popup()
+        if DB.is_empty():
+            showinfo("Error", "Entries are already emtpy - nothing to reset.")
+        else:
+            self.confirmation_popup()
 
     def confirmation_popup(self):
         if self.currently_displaying_popup == False:
@@ -163,8 +167,6 @@ class MainPage(tk.Frame):
             self.yes_btn.grid(row=1, column=0)
             self.no_btn.grid(row=1, column=1)
             self.currently_displaying_popup = True
-
-            print("it working brah")
 
     # confirmation popup button
     def yes_btn_clicked(self):
