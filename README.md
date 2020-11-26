@@ -13,8 +13,7 @@
 
 ## Description
 A password manager that allows you to store your account information such as usernames, emails and passwords.  
-User entries are stored inside a mySQL database. Passwords are encrypted using the Fernet recipe (symmetric key encryption)
-before being inserted in the database.
+User entries are stored inside a mySQL database. Passwords are encrypted using the Fernet recipe (symmetric key encryption) before being inserted in the database.
 
 ## Example
 ![](https://i.imgur.com/KdrfvE6.gif)
@@ -22,6 +21,7 @@ before being inserted in the database.
 ## Requirements
 * Python 3.8.2+
 * TK version 8.6+
+* connection to a mySQL database
 
 ## Contributions
 Contributions are always welcome!  
