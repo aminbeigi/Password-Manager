@@ -149,26 +149,30 @@ class MainPage(tk.Frame):
         self.confirmation_popup()
 
     def confirmation_popup(self):
-        win = tk.Toplevel()
-        win.wm_title("Confirmation Window")
+        if not(self.currently_displaying_popup):
+            win = tk.Toplevel()
+            win.wm_title("Confirmation Window")
+            disclaimer = "Are you sure you want to delete ALL entries?"
+            self.disclaimer_label = tk.Label(win, text=disclaimer)  
+            
+            self.yes_btn = tk.Button(win, text="YES", command=self.yes_btn_clicked)
+            self.no_btn = tk.Button(win, text="NO", command=self.no_btn_clicked) 
 
-        disclaimer = "Are you sure you want to delete ALL entries?"
-        self.disclaimer_label = tk.Label(win, text=disclaimer)  
-        
-        self.yes_btn = tk.Button(win, text="YES", command=self.yes_btn_clicked and win.destroy )
-        self.no_btn = tk.Button(win, text="NO", command=self.no_btn_clicked and win.destroy ) 
-
-        if not(False):
             self.disclaimer_label.grid(row=0, column=0)
             self.yes_btn.grid(row=1, column=0)
             self.no_btn.grid(row=1, column=1)
+            self.currently_displaying_popup = True
+
     # confirmation popup button
     def yes_btn_clicked(self):
+        self.currently_displaying_popup = False
         if not(DB.is_empty()):
             DB.clear_table()
             self.reset_RHS_conent()
+
+    # confirmation popup button
     def no_btn_clicked(self):
-        print("yay")
+        self.currently_displaying_popup = False
 
     def reset_labels(self):
         self.incorrect_input_label.grid_forget()
@@ -259,6 +263,9 @@ class MainPage(tk.Frame):
         ### empty seperator coloumn ###
         self.empty_column = tk.Label(self, text=' '*10)
         self.empty_column.grid(row=0, column=2)
+
+        ### confirmation popup ###
+        self.currently_displaying_popup = False
      
 # entry to program
 app = Application()
