@@ -142,6 +142,6 @@ class Database:
         query = ("SELECT COUNT(*) FROM user_entries")  
         self.cursor.execute(query)
         output = self.cursor.fetchall()[0][0]
-        if (output == 0):
+        if output == 0:
             return True
         return False
