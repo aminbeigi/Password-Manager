@@ -19,6 +19,7 @@ os.chdir(sys.path[0])
 ### globals ###
 DB = Database()
 
+# classes
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -50,13 +51,12 @@ class Application(tk.Tk):
         frame = self.frames[page_name]
         frame.tkraise()
 
-
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.attempt_count = 1
-
+        
         config = StaticConfigParser()
         self.master_password = config.get('LOGIN', 'master_password')
         
@@ -127,7 +127,7 @@ class MainPage(tk.Frame):
         self.RHS_email_label.grid(row=3, column=3)    
 
     def password_btn_clicked(self):
-        if (not(DB.is_empty())):
+        if not(DB.is_empty()):
             entry_no = self.variable.get()[0] # e.g. '1. Runescape'
             password = DB.get_password(entry_no)
             pyperclip.copy(password)
@@ -145,10 +145,30 @@ class MainPage(tk.Frame):
         self.RHS_username_label.grid(row=2, column=3)   
         self.RHS_email_label.grid(row=3, column=3)
 
-    def reset_btn_click(self):
-        if (not(DB.is_empty())):
+    def reset_btn_clicked(self):
+        self.confirmation_popup()
+
+    def confirmation_popup(self):
+        win = tk.Toplevel()
+        win.wm_title("Confirmation Window")
+
+        disclaimer = "Are you sure you want to delete ALL entries?"
+        self.disclaimer_label = tk.Label(win, text=disclaimer)  
+        
+        self.yes_btn = tk.Button(win, text="YES", command=self.yes_btn_clicked and win.destroy )
+        self.no_btn = tk.Button(win, text="NO", command=self.no_btn_clicked and win.destroy ) 
+
+        if not(False):
+            self.disclaimer_label.grid(row=0, column=0)
+            self.yes_btn.grid(row=1, column=0)
+            self.no_btn.grid(row=1, column=1)
+    # confirmation popup button
+    def yes_btn_clicked(self):
+        if not(DB.is_empty()):
             DB.clear_table()
             self.reset_RHS_conent()
+    def no_btn_clicked(self):
+        print("yay")
 
     def reset_labels(self):
         self.incorrect_input_label.grid_forget()
@@ -212,7 +232,7 @@ class MainPage(tk.Frame):
         self.options = DB.select_all_entry_no_and_title()
         self.variable = tk.StringVar()
 
-        if (not(DB.is_empty())):
+        if not(DB.is_empty()):
             self.display_RHS(self.options[0]) # show the first username and email
 
             pretty_options = []
@@ -233,12 +253,12 @@ class MainPage(tk.Frame):
         self.password_btn.grid(row=4, column=3)
 
         # reset database button
-        self.reset_btn = tk.Button(self, text="reset", font='arial 12', command=self.reset_btn_click)
+        self.reset_btn = tk.Button(self, text="reset", font='arial 12', command=self.reset_btn_clicked)
         self.reset_btn.grid(row=5, column=3)
 
         ### empty seperator coloumn ###
         self.empty_column = tk.Label(self, text=' '*10)
-        self.empty_column.grid(row=0, column=2)         
+        self.empty_column.grid(row=0, column=2)
      
 # entry to program
 app = Application()
