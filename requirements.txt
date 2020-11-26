@@ -1,0 +1,4 @@
+cryptography
+pyperclip
+configparser
+mysql-connector-python >= 8.0.21
