@@ -76,7 +76,7 @@ class Database:
 
         encrypted_password = self.encryption.encrypt(password, KEY)
 
-        data_entry = ((str(int(self.get_highest_id())+1)), title, username, encrypted_password, email)
+        data_entry = ((str(int(self.get_highest_entry_no())+1)), title, username, encrypted_password, email)
         
         # insert new entry
         self.cursor.execute(add_entry, data_entry)
@@ -124,8 +124,8 @@ class Database:
         decrypted_password = self.encryption.decrypt(output, KEY)
         return decrypted_password
 
-    def get_highest_id(self):
-        if (self.is_empty()):
+    def get_highest_entry_no(self):
+        if self.is_empty():
             return 0
 
         query = (f"SELECT MAX(entry_no) FROM user_entries")

@@ -102,9 +102,9 @@ class MainPage(tk.Frame):
             DB.insert(title, username, password, email)
 
             self.options = DB.select_all_entry_no_and_title()
-            self.display_RHS(DB.get_highest_id()) # get most recent entry_no
+            self.display_RHS(DB.get_highest_entry_no()) # get most recent entry_no
 
-            pretty_output = DB.get_highest_id() + ". " + DB.get_title(DB.get_highest_id())
+            pretty_output = DB.get_highest_entry_no() + ". " + DB.get_title(DB.get_highest_entry_no())
             self.variable.set(pretty_output) # display most recent entry
 
             self.update_options_menu()
