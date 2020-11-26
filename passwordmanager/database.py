@@ -116,7 +116,7 @@ class Database:
         return self.cursor.fetchall()[0][0]  
 
     def get_password(self, entry_no):
-        # returns an encrypted password
+        # returns a decrypted password
         query = (f"""SELECT password FROM user_entries 
                 WHERE entry_no = '{entry_no}'""")
         self.cursor.execute(query)
