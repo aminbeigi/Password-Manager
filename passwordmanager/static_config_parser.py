@@ -3,7 +3,7 @@ import configparser
 """A static config parser that is used by the modules main, database and encryption."""
 
 class StaticConfigParser():
-    config_file_path = './config/config1.ini'
+    config_file_path = './config/config.ini'
     config = configparser.ConfigParser()
 
     try:
