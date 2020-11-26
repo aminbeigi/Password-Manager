@@ -134,7 +134,7 @@ class MainPage(tk.Frame):
 
             # text
             self.reset_labels()
-            self.clipboard_label.grid(row=5, column=0)
+            self.clipboard_label.grid(row=5, column=0, columnspan=2, sticky='w')
     
     def reset_RHS_conent(self):
         self.variable.set('...')
