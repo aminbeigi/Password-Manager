@@ -67,7 +67,7 @@ class Database:
                 else:
                     print(err.msg)
             else:
-                print("OK")   
+                print("Succesfully created the table!")   
 
     def insert(self, title, username, password, email):
         add_entry = ("INSERT INTO user_entries "
