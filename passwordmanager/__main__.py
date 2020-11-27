@@ -277,5 +277,5 @@ class MainPage(tk.Frame):
 # entry to program
 app = Application()
 app.title("Password Manager")
-app.iconbitmap('./images/icon.ico')
+app.iconbitmap('images/icon.ico')
 app.mainloop()
